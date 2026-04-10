@@ -1,0 +1,59 @@
+# Environment
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+venv/
+.venv/
+
+# Node
+node_modules/
+frontend/dist/
+
+# Database
+*.db
+*.sqlite3
+
+# Uploads
+backend/uploads/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker volumes
+postgres_data/
+backup_data/
+
+# SSL certs
+nginx/ssl/*.pem
+nginx/ssl/*.key
+
+# Test
+.coverage
+htmlcov/
+.pytest_cache/
+
+# BMad planning artifacts
+_bmad-output/
+_bmad/
+
+# Claude Code
+.claude/
+
+# Reference / design files (not app code)
+src-example-reference/
+design-artifacts/
+docs/
+
+# Screenshots at root
+*.png
