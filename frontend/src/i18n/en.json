@@ -1,0 +1,54 @@
+{
+  "app_name": "rootslegx",
+  "app_subtitle": "Acharya Family Tree",
+  "nav": {
+    "chart": "Family Chart",
+    "members": "Members",
+    "calculator": "Calculator",
+    "admin": "Admin Panel",
+    "my_contributions": "My Contributions",
+    "login": "Login with Google",
+    "logout": "Logout"
+  },
+  "actions": {
+    "add_person": "Add Person",
+    "add_spouse": "Add Spouse",
+    "add_child": "Add Child",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "approve": "Approve",
+    "reject": "Reject",
+    "contribute": "See something wrong? Contribute",
+    "submit": "Submit",
+    "export": "Export"
+  },
+  "labels": {
+    "first_name": "First Name",
+    "middle_name": "Middle Name",
+    "last_name": "Last Name",
+    "dob": "Date of Birth",
+    "dod": "Date of Demise",
+    "place_of_birth": "Place of Birth",
+    "current_address": "Current Address",
+    "occupation": "Occupation",
+    "gender": "Gender",
+    "alive": "Alive",
+    "deceased": "Deceased",
+    "generation": "Generation",
+    "male": "Male",
+    "female": "Female",
+    "other": "Other"
+  },
+  "status": {
+    "pending": "Pending",
+    "approved": "Approved",
+    "approved_with_changes": "Approved with Changes",
+    "rejected": "Rejected"
+  },
+  "messages": {
+    "request_submitted": "Request submitted for review",
+    "rate_limit_reached": "Rate limit reached. Please wait for your existing submissions to be reviewed.",
+    "access_denied": "Access denied — contact your family admin"
+  }
+}

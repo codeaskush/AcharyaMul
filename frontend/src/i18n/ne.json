@@ -1,0 +1,54 @@
+{
+  "app_name": "rootslegx",
+  "app_subtitle": "आचार्य परिवार वंशावली",
+  "nav": {
+    "chart": "पारिवारिक चार्ट",
+    "members": "सदस्यहरू",
+    "calculator": "नाता क्याल्कुलेटर",
+    "admin": "प्रशासन प्यानल",
+    "my_contributions": "मेरो योगदान",
+    "login": "Google बाट लगइन",
+    "logout": "लगआउट"
+  },
+  "actions": {
+    "add_person": "व्यक्ति थप्नुहोस्",
+    "add_spouse": "जीवनसाथी थप्नुहोस्",
+    "add_child": "सन्तान थप्नुहोस्",
+    "edit": "सम्पादन",
+    "save": "सुरक्षित गर्नुहोस्",
+    "cancel": "रद्द गर्नुहोस्",
+    "approve": "स्वीकृत",
+    "reject": "अस्वीकृत",
+    "contribute": "केही गलत देख्नुभयो? योगदान गर्नुहोस्",
+    "submit": "पेश गर्नुहोस्",
+    "export": "निर्यात गर्नुहोस्"
+  },
+  "labels": {
+    "first_name": "पहिलो नाम",
+    "middle_name": "बीचको नाम",
+    "last_name": "थर",
+    "dob": "जन्म मिति",
+    "dod": "मृत्यु मिति",
+    "place_of_birth": "जन्म स्थान",
+    "current_address": "हालको ठेगाना",
+    "occupation": "पेशा",
+    "gender": "लिङ्ग",
+    "alive": "जीवित",
+    "deceased": "स्वर्गवासी",
+    "generation": "पुस्ता",
+    "male": "पुरुष",
+    "female": "महिला",
+    "other": "अन्य"
+  },
+  "status": {
+    "pending": "विचाराधीन",
+    "approved": "स्वीकृत",
+    "approved_with_changes": "परिवर्तन सहित स्वीकृत",
+    "rejected": "अस्वीकृत"
+  },
+  "messages": {
+    "request_submitted": "अनुरोध समीक्षाको लागि पेश गरियो",
+    "rate_limit_reached": "सीमा पुग्यो। कृपया पहिलेका अनुरोधहरू समीक्षा हुने प्रतीक्षा गर्नुहोस्।",
+    "access_denied": "पहुँच अस्वीकृत — कृपया परिवार प्रशासकलाई सम्पर्क गर्नुहोस्"
+  }
+}

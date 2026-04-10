@@ -1,0 +1,134 @@
+{
+  "persons": [
+    {
+      "id": 1, "generation": 1, "first_name": "Shree Krishna", "middle_name": null, "last_name": "Acharya",
+      "first_name_devanagari": "श्री कृष्ण", "last_name_devanagari": "आचार्य",
+      "gender": "male", "is_alive": false, "photo_url": null, "status": "approved",
+      "dob": { "ad": "1780-01-01", "bs": null }, "dod": { "ad": "1850-01-01", "bs": null },
+      "place_of_birth": "Tanahun", "occupation": "Family Patriarch"
+    },
+    {
+      "id": 2, "generation": 1, "first_name": "Saraswati", "middle_name": null, "last_name": "Acharya",
+      "first_name_devanagari": "सरस्वती", "last_name_devanagari": "आचार्य",
+      "gender": "female", "is_alive": false, "photo_url": null, "status": "approved",
+      "dob": { "ad": "1785-01-01", "bs": null }, "dod": { "ad": "1860-01-01", "bs": null },
+      "place_of_birth": "Gorkha", "occupation": null
+    },
+    {
+      "id": 3, "generation": 2, "first_name": "Bhanubhakta", "middle_name": null, "last_name": "Acharya",
+      "first_name_devanagari": "भानुभक्त", "last_name_devanagari": "आचार्य",
+      "gender": "male", "is_alive": false, "photo_url": null, "status": "approved",
+      "dob": { "ad": "1814-07-13", "bs": null }, "dod": { "ad": "1868-04-23", "bs": null },
+      "place_of_birth": "Chundi Ramgha, Tanahun", "occupation": "Mahakavi"
+    },
+    {
+      "id": 4, "generation": 2, "first_name": "Rajesh", "middle_name": null, "last_name": "Acharya",
+      "first_name_devanagari": "राजेश", "last_name_devanagari": "आचार्य",
+      "gender": "male", "is_alive": true, "photo_url": null, "status": "approved",
+      "dob": { "ad": "1970-05-10", "bs": "2027-01-27" }, "dod": null,
+      "place_of_birth": "Tanahun", "occupation": "Retired Govt. Officer"
+    },
+    {
+      "id": 5, "generation": 2, "first_name": "Sita", "middle_name": null, "last_name": "Acharya",
+      "first_name_devanagari": "सीता", "last_name_devanagari": "आचार्य",
+      "gender": "female", "is_alive": true, "photo_url": null, "status": "approved",
+      "dob": { "ad": "1974-03-15", "bs": "2030-11-30" }, "dod": null,
+      "place_of_birth": "Pokhara", "occupation": "Homemaker"
+    },
+    {
+      "id": 13, "generation": 2, "first_name": "Govinda", "middle_name": null, "last_name": "Acharya",
+      "first_name_devanagari": "गोविन्द", "last_name_devanagari": "आचार्य",
+      "gender": "male", "is_alive": false, "photo_url": null, "status": "approved",
+      "dob": { "ad": "1810-03-01", "bs": null }, "dod": { "ad": "1875-06-15", "bs": null },
+      "place_of_birth": "Tanahun", "occupation": "Farmer"
+    },
+    {
+      "id": 14, "generation": 2, "first_name": "Parvati", "middle_name": null, "last_name": "Acharya",
+      "first_name_devanagari": "पार्वती", "last_name_devanagari": "आचार्य",
+      "gender": "female", "is_alive": false, "photo_url": null, "status": "approved",
+      "dob": { "ad": "1812-08-20", "bs": null }, "dod": { "ad": "1880-01-10", "bs": null },
+      "place_of_birth": "Tanahun", "occupation": null
+    },
+    {
+      "id": 15, "generation": 2, "first_name": "Laxmi", "middle_name": null, "last_name": "Acharya",
+      "first_name_devanagari": "लक्ष्मी", "last_name_devanagari": "आचार्य",
+      "gender": "female", "is_alive": false, "photo_url": null, "status": "approved",
+      "dob": { "ad": "1818-11-05", "bs": null }, "dod": { "ad": "1890-04-20", "bs": null },
+      "place_of_birth": "Tanahun", "occupation": null
+    },
+    {
+      "id": 16, "generation": 2, "first_name": "Mohan", "middle_name": "Bahadur", "last_name": "Acharya",
+      "first_name_devanagari": "मोहन", "middle_name_devanagari": "बहादुर", "last_name_devanagari": "आचार्य",
+      "gender": "male", "is_alive": false, "photo_url": null, "status": "approved",
+      "dob": { "ad": "1820-02-14", "bs": null }, "dod": { "ad": "1885-09-30", "bs": null },
+      "place_of_birth": "Tanahun", "occupation": "Trader"
+    },
+    {
+      "id": 6, "generation": 3, "first_name": "Ram", "middle_name": null, "last_name": "Acharya",
+      "first_name_devanagari": "राम", "last_name_devanagari": "आचार्य",
+      "gender": "male", "is_alive": true, "photo_url": null, "status": "approved",
+      "dob": { "ad": "1998-01-20", "bs": "2054-10-06" }, "dod": null,
+      "place_of_birth": "Kathmandu", "occupation": "Software Engineer"
+    },
+    {
+      "id": 7, "generation": 3, "first_name": "Gita", "middle_name": null, "last_name": "Acharya",
+      "first_name_devanagari": "गीता", "last_name_devanagari": "आचार्य",
+      "gender": "female", "is_alive": true, "photo_url": null, "status": "approved",
+      "dob": { "ad": "2000-06-12", "bs": "2057-02-29" }, "dod": null,
+      "place_of_birth": "Kathmandu", "occupation": "Student"
+    },
+    {
+      "id": 8, "generation": 3, "first_name": "Hari", "middle_name": "Bahadur", "last_name": "Acharya",
+      "first_name_devanagari": "हरि", "middle_name_devanagari": "बहादुर", "last_name_devanagari": "आचार्य",
+      "gender": "male", "is_alive": true, "photo_url": null, "status": "approved",
+      "dob": { "ad": "1996-08-05", "bs": "2053-04-20" }, "dod": null,
+      "place_of_birth": "Tanahun", "occupation": "Teacher"
+    },
+    {
+      "id": 9, "generation": 3, "first_name": "Kamala", "middle_name": null, "last_name": "Acharya",
+      "first_name_devanagari": "कमला", "last_name_devanagari": "आचार्य",
+      "gender": "female", "is_alive": true, "photo_url": null, "status": "approved",
+      "dob": { "ad": "1997-11-22", "bs": "2054-08-06" }, "dod": null,
+      "place_of_birth": "Tanahun", "occupation": "Nurse"
+    },
+    {
+      "id": 10, "generation": 3, "first_name": "Prakash", "middle_name": null, "last_name": "Acharya",
+      "first_name_devanagari": "प्रकाश", "last_name_devanagari": "आचार्य",
+      "gender": "male", "is_alive": true, "photo_url": null, "status": "approved",
+      "dob": { "ad": "2002-02-14", "bs": "2058-11-02" }, "dod": null,
+      "place_of_birth": "Kathmandu", "occupation": "Student"
+    },
+    {
+      "id": 11, "generation": 4, "first_name": "Aayush", "middle_name": null, "last_name": "Acharya",
+      "first_name_devanagari": "आयुष", "last_name_devanagari": "आचार्य",
+      "gender": "male", "is_alive": true, "photo_url": null, "status": "approved",
+      "dob": { "ad": "2024-03-01", "bs": "2080-11-17" }, "dod": null,
+      "place_of_birth": "Kathmandu", "occupation": null
+    },
+    {
+      "id": 12, "generation": 4, "first_name": "Anisha", "middle_name": null, "last_name": "Acharya",
+      "first_name_devanagari": "अनिशा", "last_name_devanagari": "आचार्य",
+      "gender": "female", "is_alive": true, "photo_url": null, "status": "approved",
+      "dob": { "ad": "2025-09-15", "bs": "2082-05-30" }, "dod": null,
+      "place_of_birth": "Kathmandu", "occupation": null
+    }
+  ],
+  "relationships": [
+    { "id": 1, "person_a_id": 1, "person_b_id": 2, "type": "marriage", "marriage_status": "active", "status": "approved" },
+    { "id": 2, "person_a_id": 1, "person_b_id": 3, "type": "parent_child", "marriage_status": null, "status": "approved" },
+    { "id": 3, "person_a_id": 1, "person_b_id": 4, "type": "parent_child", "marriage_status": null, "status": "approved" },
+    { "id": 13, "person_a_id": 1, "person_b_id": 13, "type": "parent_child", "marriage_status": null, "status": "approved" },
+    { "id": 14, "person_a_id": 1, "person_b_id": 14, "type": "parent_child", "marriage_status": null, "status": "approved" },
+    { "id": 15, "person_a_id": 1, "person_b_id": 15, "type": "parent_child", "marriage_status": null, "status": "approved" },
+    { "id": 16, "person_a_id": 1, "person_b_id": 16, "type": "parent_child", "marriage_status": null, "status": "approved" },
+    { "id": 4, "person_a_id": 4, "person_b_id": 5, "type": "marriage", "marriage_status": "active", "status": "approved" },
+    { "id": 5, "person_a_id": 4, "person_b_id": 6, "type": "parent_child", "marriage_status": null, "status": "approved" },
+    { "id": 6, "person_a_id": 4, "person_b_id": 7, "type": "parent_child", "marriage_status": null, "status": "approved" },
+    { "id": 7, "person_a_id": 3, "person_b_id": 8, "type": "parent_child", "marriage_status": null, "status": "approved" },
+    { "id": 8, "person_a_id": 3, "person_b_id": 9, "type": "parent_child", "marriage_status": null, "status": "approved" },
+    { "id": 9, "person_a_id": 3, "person_b_id": 10, "type": "parent_child", "marriage_status": null, "status": "approved" },
+    { "id": 10, "person_a_id": 8, "person_b_id": 9, "type": "marriage", "marriage_status": "active", "status": "approved" },
+    { "id": 11, "person_a_id": 8, "person_b_id": 11, "type": "parent_child", "marriage_status": null, "status": "approved" },
+    { "id": 12, "person_a_id": 8, "person_b_id": 12, "type": "parent_child", "marriage_status": null, "status": "approved" }
+  ]
+}
