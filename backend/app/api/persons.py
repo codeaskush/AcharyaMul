@@ -27,7 +27,7 @@ def create_person(
 @router.get("")
 def list_persons(
     page: int = Query(1, ge=1),
-    per_page: int = Query(25, ge=1, le=100),
+    per_page: int = Query(25, ge=1, le=500),
     sort_by: str = Query("first_name"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
