@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
@@ -36,6 +37,8 @@ export default function PersonListPage() {
   const [filtered, setFiltered] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [genFilter, setGenFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [selectedPerson, setSelectedPerson] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [editPerson, setEditPerson] = useState(null);
@@ -51,19 +54,37 @@ export default function PersonListPage() {
 
   useEffect(() => { fetchPersons(); }, []);
 
-  // Filter on search
+  // Get unique generations for filter dropdown
+  const generations = [...new Set(persons.map(p => p.generation))].sort((a, b) => a - b);
+
+  // Filter on search + generation + status
   useEffect(() => {
-    if (!search.trim()) {
-      setFiltered(persons);
-    } else {
+    let result = persons;
+
+    // Text search
+    if (search.trim()) {
       const q = search.toLowerCase();
-      setFiltered(persons.filter(p =>
+      result = result.filter(p =>
         [p.first_name, p.middle_name, p.last_name, p.first_name_devanagari, p.last_name_devanagari, p.occupation, p.place_of_birth]
           .filter(Boolean).some(f => f.toLowerCase().includes(q))
-      ));
+      );
     }
+
+    // Generation filter
+    if (genFilter !== 'all') {
+      result = result.filter(p => p.generation === parseInt(genFilter));
+    }
+
+    // Alive/deceased filter
+    if (statusFilter === 'alive') {
+      result = result.filter(p => p.is_alive);
+    } else if (statusFilter === 'deceased') {
+      result = result.filter(p => !p.is_alive);
+    }
+
+    setFiltered(result);
     setPage(1);
-  }, [search, persons]);
+  }, [search, genFilter, statusFilter, persons]);
 
   const totalPages = Math.ceil(filtered.length / perPage);
   const paginated = filtered.slice((page - 1) * perPage, page * perPage);
@@ -98,8 +119,8 @@ export default function PersonListPage() {
 
       {/* Search & Filters Bar */}
       <Card className="p-4">
-        <div className="flex items-center gap-3">
-          <div className="relative flex-1 max-w-sm">
+        <div className="flex items-center gap-3 flex-wrap">
+          <div className="relative flex-1 min-w-[200px] max-w-sm">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search by name, occupation, place..."
@@ -108,7 +129,31 @@ export default function PersonListPage() {
               className="pl-9"
             />
           </div>
-          <div className="text-sm text-muted-foreground">
+
+          <Select value={genFilter} onValueChange={setGenFilter}>
+            <SelectTrigger className="w-[140px]">
+              <SelectValue placeholder="Generation" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Generations</SelectItem>
+              {generations.map(g => (
+                <SelectItem key={g} value={String(g)}>Generation {g}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-[120px]">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="alive">{t('labels.alive')}</SelectItem>
+              <SelectItem value="deceased">{t('labels.deceased')}</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <div className="text-sm text-muted-foreground ml-auto">
             {filtered.length !== persons.length
               ? `${filtered.length} of ${persons.length} results`
               : `${persons.length} total`

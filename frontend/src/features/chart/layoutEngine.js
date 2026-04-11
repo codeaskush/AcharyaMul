@@ -210,6 +210,7 @@ export function buildLayout(persons, relationships, callbacks = {}) {
 
     connectors.push({
       type: 'marriage',
+      marriage_id: m.id,
       x1: leftX + NODE_W,
       y1: p1.y + NODE_H / 2,
       x2: rightX,

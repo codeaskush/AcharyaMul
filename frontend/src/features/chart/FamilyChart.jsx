@@ -14,7 +14,7 @@ import PersonNode from './PersonNode';
 import { ConnectorsSvg, GenerationLabels, GenerationDividers } from './TreeConnectors';
 import AddRelationshipDialog from './AddRelationshipDialog';
 import { buildLayout } from './layoutEngine';
-import { graphApi } from '@/api/client';
+import { graphApi, relationshipApi } from '@/api/client';
 import mockData from './mockData.json';
 import PersonDetail from '@/features/person/PersonDetail';
 import { Loader2 } from 'lucide-react';
@@ -68,11 +68,8 @@ function FamilyChartInner() {
     loadGraph();
   }, [loadGraph]);
 
-  const onNodeClick = useCallback((_event, node) => {
-    if (node.data?.person) {
-      setSelectedPerson(node.data.person);
-    }
-  }, []);
+  // Node click handled by popover tooltip inside PersonNode
+  // No onNodeClick needed — the popover's "Details" button triggers onViewDetails
 
   if (loading) {
     return (
@@ -100,7 +97,6 @@ function FamilyChartInner() {
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        onNodeClick={onNodeClick}
         nodeTypes={nodeTypes}
         fitView
         fitViewOptions={{ padding: 0.3 }}
@@ -113,7 +109,20 @@ function FamilyChartInner() {
         preventScrolling
       >
         <GenerationDividers generationRows={generationRows} />
-        <ConnectorsSvg connectors={connectors} />
+        <ConnectorsSvg connectors={connectors} onMarriageClick={async (c) => {
+          const action = c.marriage_status === 'divorced' ? 'restore' : 'divorce';
+          const confirmed = confirm(`Mark this marriage as ${action === 'divorce' ? 'divorced' : 'active'}?`);
+          if (!confirmed) return;
+          try {
+            await relationshipApi.update(c.marriage_id, {
+              marriage_status: action === 'divorce' ? 'divorced' : 'active',
+              comment: action === 'divorce' ? 'Marked as divorced' : 'Restored marriage',
+            });
+            loadGraph();
+          } catch (err) {
+            alert(err.detail || 'Failed to update marriage status');
+          }
+        }} />
         <GenerationLabels generationRows={generationRows} />
         <Background color="#e5e7eb" gap={20} size={1} />
         <Controls showInteractive={false} className="!bg-white !border !border-border !rounded-lg !shadow-sm" />

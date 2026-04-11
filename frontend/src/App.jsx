@@ -6,6 +6,7 @@ import { LanguageProvider, useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import PersonListPage from '@/features/person/PersonListPage';
 import FamilyChart from '@/features/chart/FamilyChart';
+import CalculatorPage from '@/features/calculator/Calculator';
 import { Toaster } from '@/components/ui/sonner';
 import '@/styles/global.css';
 
@@ -53,7 +54,7 @@ function AppRoutes() {
         <Routes>
           <Route path="/" element={<FamilyChart />} />
           <Route path="/members" element={<PersonListPage />} />
-          <Route path="/calculator" element={<div className="flex items-center justify-center h-[calc(100vh-3.5rem)] text-muted-foreground text-lg">Relationship Calculator (Story 5.1)</div>} />
+          <Route path="/calculator" element={<CalculatorPage />} />
           <Route path="/admin" element={<div className="flex items-center justify-center h-[calc(100vh-3.5rem)] text-muted-foreground text-lg">Admin Panel (Story 7.1)</div>} />
           <Route path="/my-contributions" element={<div className="flex items-center justify-center h-[calc(100vh-3.5rem)] text-muted-foreground text-lg">My Contributions (Story 6.5)</div>} />
         </Routes>

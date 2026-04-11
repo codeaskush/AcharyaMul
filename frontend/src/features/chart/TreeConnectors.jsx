@@ -6,7 +6,7 @@ import { useStore } from '@xyflow/react';
  *
  * Generation labels are rendered separately as a fixed HTML overlay.
  */
-export function ConnectorsSvg({ connectors }) {
+export function ConnectorsSvg({ connectors, onMarriageClick }) {
   const transform = useStore((s) => s.transform);
   const [tx, ty, scale] = transform;
 
@@ -20,22 +20,33 @@ export function ConnectorsSvg({ connectors }) {
         left: 0,
         width: '100%',
         height: '100%',
-        pointerEvents: 'none',
         overflow: 'visible',
-        zIndex: 0,
+        zIndex: 5,
+        pointerEvents: 'none',
       }}
     >
-      <g transform={`translate(${tx}, ${ty}) scale(${scale})`}>
-        {/* Marriage lines */}
-        {connectors.filter(c => c.type === 'marriage').map((c, i) => (
-          <line
-            key={`m-${i}`}
-            x1={c.x1} y1={c.y1} x2={c.x2} y2={c.y2}
-            stroke={c.marriage_status === 'divorced' ? '#f87171' : '#fca5a5'}
-            strokeWidth={2}
-            strokeDasharray={c.marriage_status === 'divorced' ? '6 4' : 'none'}
-          />
-        ))}
+      <g transform={`translate(${tx}, ${ty}) scale(${scale})`} style={{ pointerEvents: 'none' }}>
+        {/* Marriage lines — clickable for divorce toggle */}
+        {connectors.filter(c => c.type === 'marriage').map((c, i) => {
+          const isDivorced = c.marriage_status === 'divorced';
+          return (
+            <g key={`m-${i}`} style={{ cursor: onMarriageClick ? 'pointer' : 'default', pointerEvents: 'auto' }}
+               onClick={() => onMarriageClick?.(c)}>
+              {/* Invisible thick hitbox for easier clicking */}
+              <line
+                x1={c.x1} y1={c.y1} x2={c.x2} y2={c.y2}
+                stroke="transparent" strokeWidth={12}
+              />
+              {/* Visible marriage line — dotted if divorced */}
+              <line
+                x1={c.x1} y1={c.y1} x2={c.x2} y2={c.y2}
+                stroke={isDivorced ? '#f87171' : '#fca5a5'}
+                strokeWidth={2}
+                strokeDasharray={isDivorced ? '6 4' : 'none'}
+              />
+            </g>
+          );
+        })}
 
         {/* Parent-child T-connectors — grouped by drop point so each marriage has its own bar */}
         {(() => {
