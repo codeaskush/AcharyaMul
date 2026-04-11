@@ -20,6 +20,7 @@ export default function FamilyChartD3() {
   const containerRef = useRef(null);
   const svgRef = useRef(null);
   const gRef = useRef(null);
+  const [zoomTransform, setZoomTransform] = useState({ x: 0, y: 0, k: 1 });
   const zoomRef = useRef(null);
 
   const [loading, setLoading] = useState(true);
@@ -260,6 +261,7 @@ export default function FamilyChartD3() {
       .scaleExtent([0.1, 3])
       .on('zoom', (event) => {
         g.attr('transform', event.transform);
+        setZoomTransform({ x: event.transform.x, y: event.transform.y, k: event.transform.k });
       });
 
     zoomRef.current = zoom;
@@ -365,12 +367,29 @@ export default function FamilyChartD3() {
         <g ref={gRef} />
       </svg>
 
-      {/* Generation labels — fixed left */}
-      {generationLabels.map(({ generation, y }) => {
-        // We need the current transform to position labels
-        // For simplicity, render as absolute positioned divs that we'll update
-        return null; // handled below
-      })}
+      {/* Generation labels — fixed to left edge, moves vertically with zoom */}
+      <div className="absolute top-0 left-0 h-full w-full pointer-events-none overflow-hidden" style={{ zIndex: 10 }}>
+        {generationLabels.map(({ generation, y }) => {
+          const midY = y + NODE_H / 2;
+          const screenY = zoomTransform.y + midY * zoomTransform.k;
+
+          return (
+            <div
+              key={`gen-${generation}`}
+              className="absolute left-2.5"
+              style={{
+                top: screenY,
+                transform: 'translateY(-50%) rotate(180deg)',
+                writingMode: 'vertical-rl',
+              }}
+            >
+              <span className="text-[10px] font-medium text-gray-300 tracking-[0.2em] uppercase whitespace-nowrap select-none">
+                Generation {generation}
+              </span>
+            </div>
+          );
+        })}
+      </div>
 
       {/* Popover action bar */}
       {popover && (() => {
