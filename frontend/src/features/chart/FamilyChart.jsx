@@ -6,13 +6,13 @@ import {
   MiniMap,
   useNodesState,
   useEdgesState,
-  useReactFlow,
   ReactFlowProvider,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
 import PersonNode from './PersonNode';
 import { ConnectorsSvg, GenerationLabels, GenerationDividers } from './TreeConnectors';
+import AddRelationshipDialog from './AddRelationshipDialog';
 import { buildLayout } from './layoutEngine';
 import { graphApi } from '@/api/client';
 import mockData from './mockData.json';
@@ -30,6 +30,14 @@ function FamilyChartInner() {
   const [generationRows, setGenerationRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedPerson, setSelectedPerson] = useState(null);
+  const [relDialog, setRelDialog] = useState({ open: false, person: null, type: null });
+
+  // Callbacks passed into node data so PersonNode context menu can trigger them
+  const nodeCallbacks = useCallback(() => ({
+    onViewDetails: (person) => setSelectedPerson(person),
+    onAddSpouse: (person) => setRelDialog({ open: true, person, type: 'marriage' }),
+    onAddChild: (person) => setRelDialog({ open: true, person, type: 'parent_child' }),
+  }), []);
 
   const loadGraph = useCallback(async () => {
     setLoading(true);
@@ -43,7 +51,8 @@ function FamilyChartInner() {
         persons = result.data.persons;
         relationships = result.data.relationships;
       }
-      const layout = buildLayout(persons, relationships);
+      const callbacks = nodeCallbacks();
+      const layout = buildLayout(persons, relationships, callbacks);
       setNodes(layout.nodes);
       setEdges(layout.edges);
       setConnectors(layout.connectors);
@@ -53,7 +62,7 @@ function FamilyChartInner() {
     } finally {
       setLoading(false);
     }
-  }, [setNodes, setEdges]);
+  }, [setNodes, setEdges, nodeCallbacks]);
 
   useEffect(() => {
     loadGraph();
@@ -103,15 +112,9 @@ function FamilyChartInner() {
         zoomOnPinch
         preventScrolling
       >
-        {/* Dotted lines separating generations — pans/zooms with nodes */}
         <GenerationDividers generationRows={generationRows} />
-
-        {/* SVG connectors — pans/zooms with nodes */}
         <ConnectorsSvg connectors={connectors} />
-
-        {/* Generation labels — pinned to left edge, moves vertically only */}
         <GenerationLabels generationRows={generationRows} />
-
         <Background color="#e5e7eb" gap={20} size={1} />
         <Controls showInteractive={false} className="!bg-white !border !border-border !rounded-lg !shadow-sm" />
         <MiniMap
@@ -127,11 +130,16 @@ function FamilyChartInner() {
       </ReactFlow>
 
       {selectedPerson && (
-        <PersonDetail
-          person={selectedPerson}
-          onClose={() => setSelectedPerson(null)}
-        />
+        <PersonDetail person={selectedPerson} onClose={() => setSelectedPerson(null)} />
       )}
+
+      <AddRelationshipDialog
+        open={relDialog.open}
+        onClose={() => setRelDialog({ open: false, person: null, type: null })}
+        person={relDialog.person}
+        type={relDialog.type}
+        onSuccess={loadGraph}
+      />
     </div>
   );
 }

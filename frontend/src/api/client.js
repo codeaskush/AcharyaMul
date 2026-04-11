@@ -36,11 +36,13 @@ export const personApi = {
   getById: (id) => get(`/persons/${id}`),
   create: (data) => post('/persons', data),
   update: (id, data) => put(`/persons/${id}`, data),
+  updateVisibility: (id, data) => put(`/persons/${id}/visibility`, data),
 };
 
 export const relationshipApi = {
   create: (data) => post('/relationships', data),
   update: (id, data) => put(`/relationships/${id}`, data),
+  getMarriagesFor: (personId) => get(`/relationships/marriages/${personId}`),
 };
 
 export const contributionApi = {

@@ -26,36 +26,78 @@ export function ConnectorsSvg({ connectors }) {
       }}
     >
       <g transform={`translate(${tx}, ${ty}) scale(${scale})`}>
-        {connectors.map((c, i) => {
-          if (c.type === 'marriage') {
-            return (
-              <line
-                key={`m-${i}`}
-                x1={c.x1}
-                y1={c.y1}
-                x2={c.x2}
-                y2={c.y2}
-                stroke={c.marriage_status === 'divorced' ? '#f87171' : '#fca5a5'}
-                strokeWidth={2}
-                strokeDasharray={c.marriage_status === 'divorced' ? '6 4' : 'none'}
-              />
-            );
-          }
+        {/* Marriage lines */}
+        {connectors.filter(c => c.type === 'marriage').map((c, i) => (
+          <line
+            key={`m-${i}`}
+            x1={c.x1} y1={c.y1} x2={c.x2} y2={c.y2}
+            stroke={c.marriage_status === 'divorced' ? '#f87171' : '#fca5a5'}
+            strokeWidth={2}
+            strokeDasharray={c.marriage_status === 'divorced' ? '6 4' : 'none'}
+          />
+        ))}
 
-          if (c.type === 'parent-child') {
-            const midY = c.parentY + (c.childY - c.parentY) / 2;
+        {/* Parent-child T-connectors — grouped by drop point so each marriage has its own bar */}
+        {(() => {
+          const pcConnectors = connectors.filter(c => c.type === 'parent-child');
+
+          // Group by parentX,parentY (each marriage midpoint is a unique drop point)
+          const groups = {};
+          pcConnectors.forEach(c => {
+            const key = `${c.parentX},${c.parentY}`;
+            if (!groups[key]) groups[key] = { parentX: c.parentX, parentY: c.parentY, children: [] };
+            groups[key].children.push({ x: c.childX, y: c.childY });
+          });
+
+          return Object.entries(groups).map(([key, group]) => {
+            const { parentX, parentY, children } = group;
+            if (children.length === 0) return null;
+
+            const childY = children[0].y; // all children in same generation row
+            const barY = parentY + (childY - parentY) / 2;
+
+            // Find leftmost and rightmost child X
+            const childXs = children.map(c => c.x);
+            const minChildX = Math.min(...childXs);
+            const maxChildX = Math.max(...childXs);
+
             return (
-              <path
-                key={`pc-${i}`}
-                d={`M ${c.parentX} ${c.parentY} L ${c.parentX} ${midY} L ${c.childX} ${midY} L ${c.childX} ${c.childY}`}
-                fill="none"
-                stroke="#9ca3af"
-                strokeWidth={1.5}
-              />
+              <g key={`pcg-${key}`}>
+                {/* Vertical drop: parent midpoint → bar level */}
+                <line
+                  x1={parentX} y1={parentY} x2={parentX} y2={barY}
+                  stroke="#9ca3af" strokeWidth={1.5}
+                />
+
+                {/* Horizontal bar spanning all children */}
+                {children.length > 1 && (
+                  <line
+                    x1={minChildX} y1={barY} x2={maxChildX} y2={barY}
+                    stroke="#9ca3af" strokeWidth={1.5}
+                  />
+                )}
+
+                {/* Vertical drop from bar to each child */}
+                {children.map((child, ci) => (
+                  <line
+                    key={ci}
+                    x1={child.x} y1={barY} x2={child.x} y2={child.y}
+                    stroke="#9ca3af" strokeWidth={1.5}
+                  />
+                ))}
+
+                {/* If drop point is not aligned with bar (offset parent), connect drop to bar */}
+                {(parentX < minChildX || parentX > maxChildX) && (
+                  <line
+                    x1={parentX} y1={barY}
+                    x2={parentX < minChildX ? minChildX : maxChildX} y2={barY}
+                    stroke="#9ca3af" strokeWidth={1.5}
+                  />
+                )}
+              </g>
             );
-          }
-          return null;
-        })}
+          });
+        })()}
       </g>
     </svg>
   );

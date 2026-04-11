@@ -20,6 +20,7 @@ def create_relationship(db: Session, data: RelationshipCreate, current_user: Use
         type=data.type,
         marriage_status=marriage_status,
         child_birth_order=data.child_birth_order,
+        marriage_id=data.marriage_id,
         status=ApprovalStatus.approved,
         created_by_id=current_user.id,
         approved_by_id=current_user.id,
@@ -30,6 +31,10 @@ def create_relationship(db: Session, data: RelationshipCreate, current_user: Use
     # For parent-child: update child's generation
     if data.type == RelationshipType.parent_child:
         _update_child_generation(db, data.person_a_id, data.person_b_id)
+
+    # For marriage: sync spouse's generation to match
+    if data.type == RelationshipType.marriage:
+        _sync_spouse_generation(db, data.person_a_id, data.person_b_id)
 
     # Create revision
     person_a = db.query(Person).get(data.person_a_id)
@@ -53,6 +58,20 @@ def create_relationship(db: Session, data: RelationshipCreate, current_user: Use
     return relationship
 
 
+def _sync_spouse_generation(db: Session, person_a_id: int, person_b_id: int):
+    """When two people marry, sync the spouse with no parent to match the other's generation."""
+    a = db.query(Person).get(person_a_id)
+    b = db.query(Person).get(person_b_id)
+    if not a or not b:
+        return
+    # If one has a higher generation (is a child in the tree), update the other to match
+    if a.generation != b.generation:
+        if a.generation > b.generation:
+            b.generation = a.generation
+        else:
+            a.generation = b.generation
+
+
 def _update_child_generation(db: Session, parent_id: int, child_id: int):
     """Set child's generation to parent's generation + 1, cascade to descendants."""
     parent = db.query(Person).get(parent_id)
@@ -67,8 +86,31 @@ def _update_child_generation(db: Session, parent_id: int, child_id: int):
     old_generation = child.generation
     child.generation = new_generation
 
+    # Sync spouse of the child to match new generation
+    _sync_spouse_of(db, child_id)
+
     # Cascade: update all descendants of this child
     _cascade_generation(db, child_id, new_generation - old_generation)
+
+
+def _sync_spouse_of(db: Session, person_id: int):
+    """Find this person's spouse(s) and sync their generation."""
+    spouse_rels = (
+        db.query(Relationship)
+        .filter(
+            Relationship.type == RelationshipType.marriage,
+            (Relationship.person_a_id == person_id) | (Relationship.person_b_id == person_id),
+        )
+        .all()
+    )
+    person = db.query(Person).get(person_id)
+    if not person:
+        return
+    for rel in spouse_rels:
+        spouse_id = rel.person_b_id if rel.person_a_id == person_id else rel.person_a_id
+        spouse = db.query(Person).get(spouse_id)
+        if spouse and spouse.generation != person.generation:
+            spouse.generation = person.generation
 
 
 def _cascade_generation(db: Session, person_id: int, delta: int):
@@ -129,6 +171,7 @@ def serialize_relationship(rel: Relationship) -> dict:
         "type": rel.type.value,
         "marriage_status": rel.marriage_status.value if rel.marriage_status else None,
         "child_birth_order": rel.child_birth_order,
+        "marriage_id": rel.marriage_id,
         "status": rel.status.value,
         "created_at": rel.created_at.isoformat() if rel.created_at else None,
         "updated_at": rel.updated_at.isoformat() if rel.updated_at else None,

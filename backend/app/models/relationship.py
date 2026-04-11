@@ -16,6 +16,7 @@ class Relationship(Base):
     type: Mapped[RelationshipType] = mapped_column(Enum(RelationshipType), nullable=False)
     marriage_status: Mapped[MarriageStatus | None] = mapped_column(Enum(MarriageStatus), nullable=True)
     child_birth_order: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    marriage_id: Mapped[int | None] = mapped_column(ForeignKey("relationships.id"), nullable=True)
     status: Mapped[ApprovalStatus] = mapped_column(Enum(ApprovalStatus), default=ApprovalStatus.approved)
     created_by_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
     approved_by_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True)

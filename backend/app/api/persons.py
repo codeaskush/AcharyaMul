@@ -72,6 +72,35 @@ def update_person(
     return {"data": person_service.serialize_person(updated, is_admin=True)}
 
 
+@router.put("/{person_id}/visibility")
+def update_visibility(
+    person_id: int,
+    data: dict,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    if current_user.role != Role.admin:
+        raise HTTPException(status_code=403, detail="Only admins can change visibility settings")
+
+    person = person_service.get_person_by_id(db, person_id)
+    if not person:
+        raise HTTPException(status_code=404, detail="Person not found")
+
+    # Validate keys and build new dict (SQLAlchemy needs a new object to detect JSON change)
+    allowed_keys = {"dob", "address", "phone", "email"}
+    visibility = dict(person.visibility_settings or {"dob": True, "address": True, "phone": True, "email": True})
+    for key, val in data.items():
+        if key in allowed_keys and isinstance(val, bool):
+            visibility[key] = val
+
+    person.visibility_settings = visibility
+    from sqlalchemy.orm.attributes import flag_modified
+    flag_modified(person, "visibility_settings")
+    db.commit()
+    db.refresh(person)
+    return {"data": person_service.serialize_person(person, is_admin=True)}
+
+
 @router.get("/{person_id}/revisions")
 def get_person_revisions(
     person_id: int,

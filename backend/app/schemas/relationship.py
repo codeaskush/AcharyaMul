@@ -11,6 +11,7 @@ class RelationshipCreate(BaseModel):
     type: RelationshipType
     marriage_status: MarriageStatus | None = None
     child_birth_order: int | None = None
+    marriage_id: int | None = None  # For parent_child: which marriage this child belongs to
 
 
 class RelationshipUpdate(BaseModel):
@@ -26,6 +27,7 @@ class RelationshipResponse(BaseModel):
     type: str
     marriage_status: str | None
     child_birth_order: int | None
+    marriage_id: int | None
     status: str
     created_at: datetime
     updated_at: datetime

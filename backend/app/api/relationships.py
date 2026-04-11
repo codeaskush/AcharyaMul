@@ -1,12 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
+from fastapi import Query as QueryParam
+
 from app.database import get_db
 from app.dependencies import get_current_user
 from app.models.user import User
-from app.models.enums import Role
+from app.models.relationship import Relationship
+from app.models.enums import Role, RelationshipType
 from app.schemas.relationship import RelationshipCreate, RelationshipUpdate
-from app.services import relationship_service, revision_service
+from app.services import relationship_service, revision_service, person_service
 
 router = APIRouter()
 
@@ -34,6 +37,35 @@ def list_relationships(
 ):
     rels = relationship_service.get_all_relationships(db)
     return {"data": [relationship_service.serialize_relationship(r) for r in rels]}
+
+
+@router.get("/marriages/{person_id}")
+def get_marriages_for_person(
+    person_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Get all marriages for a person, with spouse details."""
+    rels = (
+        db.query(Relationship)
+        .filter(
+            Relationship.type == RelationshipType.marriage,
+            (Relationship.person_a_id == person_id) | (Relationship.person_b_id == person_id),
+        )
+        .all()
+    )
+    result = []
+    for r in rels:
+        spouse_id = r.person_b_id if r.person_a_id == person_id else r.person_a_id
+        spouse = person_service.get_person_by_id(db, spouse_id)
+        result.append({
+            "marriage_id": r.id,
+            "spouse_id": spouse_id,
+            "spouse_name": f"{spouse.first_name} {spouse.last_name or ''}".strip() if spouse else "Unknown",
+            "spouse_gender": spouse.gender.value if spouse else None,
+            "marriage_status": r.marriage_status.value if r.marriage_status else None,
+        })
+    return {"data": result}
 
 
 @router.get("/{rel_id}")

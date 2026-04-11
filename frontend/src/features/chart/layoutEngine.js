@@ -1,12 +1,11 @@
 /**
- * Family tree layout engine — adapted from reference implementation.
- * Uses top-down recursive positioning with bottom-up width calculation.
+ * Family tree layout engine.
  *
- * Outputs:
- * - nodes: React Flow nodes for persons
- * - edges: React Flow edges for marriage lines only
- * - connectors: Raw SVG connector data for parent-child lines (drawn as overlay)
- * - generationRows: Generation label data
+ * Layout rules:
+ * - 1 spouse: [male] ——— [female] (male left, female right)
+ * - 2 spouses: [wife1] ——— [husband] ——— [wife2] (man in middle)
+ * - Children of each marriage drop from that marriage's midpoint
+ * - Children grouped by marriage_id, each group centered under its marriage line
  */
 
 const NODE_W = 180;
@@ -15,7 +14,7 @@ const H_GAP = 40;
 const V_GAP = 120;
 const COUPLE_GAP = 48;
 
-export function buildLayout(persons, relationships) {
+export function buildLayout(persons, relationships, callbacks = {}) {
   if (!persons.length) return { nodes: [], edges: [], connectors: [], generationRows: [] };
 
   const personMap = {};
@@ -26,14 +25,11 @@ export function buildLayout(persons, relationships) {
 
   // Build adjacency
   const spouseOf = {};
-  const marriageOf = {};
   marriages.forEach(m => {
     if (!spouseOf[m.person_a_id]) spouseOf[m.person_a_id] = [];
     if (!spouseOf[m.person_b_id]) spouseOf[m.person_b_id] = [];
     spouseOf[m.person_a_id].push({ spouseId: m.person_b_id, marriage: m });
     spouseOf[m.person_b_id].push({ spouseId: m.person_a_id, marriage: m });
-    marriageOf[m.person_a_id] = m;
-    marriageOf[m.person_b_id] = m;
   });
 
   const childrenOf = {};
@@ -44,7 +40,11 @@ export function buildLayout(persons, relationships) {
     hasParent.add(r.person_b_id);
   });
 
-  // Find roots (no parents, and spouse also has no parents)
+  // childId → marriage_id
+  const childMarriageId = {};
+  parentChild.forEach(pc => { childMarriageId[pc.person_b_id] = pc.marriage_id; });
+
+  // Find roots
   const roots = persons.filter(p => {
     if (hasParent.has(p.id)) return false;
     const spouses = (spouseOf[p.id] || []).map(s => s.spouseId);
@@ -52,7 +52,7 @@ export function buildLayout(persons, relationships) {
   });
   if (roots.length === 0 && persons.length > 0) roots.push(persons[0]);
 
-  // Build family units
+  // Build family units — one unit per family group (person + all spouses)
   const visited = new Set();
   const familyUnits = [];
 
@@ -61,40 +61,57 @@ export function buildLayout(persons, relationships) {
     visited.add(personId);
 
     const spouseEntries = spouseOf[personId] || [];
+    const allSpouseIds = [];
+    const unitMarriages = [];
+    const allChildren = new Set(childrenOf[personId] || []);
 
-    if (spouseEntries.length === 0) {
-      const myChildren = [...new Set(childrenOf[personId] || [])];
-      familyUnits.push({
-        id: `unit-${personId}`,
-        members: [personId],
-        children: myChildren,
-        generation,
-        marriage: null,
-      });
-      myChildren.forEach(cid => { if (!visited.has(cid)) buildUnits(cid, generation + 1); });
-    } else {
-      spouseEntries.forEach(({ spouseId, marriage }) => {
-        if (visited.has(spouseId)) return;
+    spouseEntries.forEach(({ spouseId, marriage }) => {
+      if (!visited.has(spouseId)) {
         visited.add(spouseId);
+        allSpouseIds.push(spouseId);
+        unitMarriages.push(marriage);
+        (childrenOf[spouseId] || []).forEach(cid => allChildren.add(cid));
+      }
+    });
 
-        const p1Kids = new Set(childrenOf[personId] || []);
-        const p2Kids = new Set(childrenOf[spouseId] || []);
-        const coupleChildren = [...new Set([...p1Kids, ...p2Kids])];
-
-        familyUnits.push({
-          id: `unit-m-${marriage.id}`,
-          members: [personId, spouseId],
-          children: coupleChildren,
-          generation,
-          marriage,
-        });
-
-        coupleChildren.forEach(cid => { if (!visited.has(cid)) buildUnits(cid, generation + 1); });
-      });
+    // Build members array based on spouse count
+    let members;
+    if (allSpouseIds.length === 0) {
+      members = [personId];
+    } else if (allSpouseIds.length === 1) {
+      // 1 spouse: male left, female right
+      const p = personMap[personId];
+      const s = personMap[allSpouseIds[0]];
+      members = orderSpouses(p, s).map(x => x.id);
+    } else {
+      // 2 spouses: [wife1, husband, wife2] — man in middle
+      const p = personMap[personId];
+      if (p.gender === 'male') {
+        members = [allSpouseIds[0], personId, allSpouseIds[1]];
+      } else {
+        members = [allSpouseIds[0], allSpouseIds[1], personId];
+      }
     }
+
+    familyUnits.push({
+      id: `unit-${personId}`,
+      members,
+      children: [...allChildren],
+      generation,
+      marriages: unitMarriages,
+    });
+
+    allChildren.forEach(cid => { if (!visited.has(cid)) buildUnits(cid, generation + 1); });
   }
 
-  roots.forEach(r => buildUnits(r.id, 0));
+  // Start from roots — prioritize persons with most spouses first
+  // so the "hub" person (e.g. man with 2 wives) builds the unit, not a spouse
+  const sortedRoots = [...roots].sort((a, b) => {
+    const aSpouses = (spouseOf[a.id] || []).length;
+    const bSpouses = (spouseOf[b.id] || []).length;
+    return bSpouses - aSpouses; // most spouses first
+  });
+  sortedRoots.forEach(r => buildUnits(r.id, 0));
   persons.forEach(p => { if (!visited.has(p.id)) buildUnits(p.id, 0); });
 
   // Compute unit widths bottom-up
@@ -128,12 +145,8 @@ export function buildLayout(persons, relationships) {
     const totalW = getUnitWidth(unit);
     const memberStartX = startX + (totalW - memberW) / 2;
 
-    // Order spouses: male left, female right
-    const ordered = unit.members.length === 2
-      ? orderSpouses(personMap[unit.members[0]], personMap[unit.members[1]]).map(p => p.id)
-      : unit.members;
-
-    ordered.forEach((pid, idx) => {
+    // Place members in order (already arranged: [wife1, husband, wife2] or [male, female])
+    unit.members.forEach((pid, idx) => {
       if (personPositions[pid]) return;
       const x = memberStartX + idx * (NODE_W + COUPLE_GAP);
       personPositions[pid] = { x, y };
@@ -141,7 +154,13 @@ export function buildLayout(persons, relationships) {
         id: `p-${pid}`,
         type: 'personNode',
         position: { x, y },
-        data: { person: personMap[pid], isPending: personMap[pid].status === 'pending' },
+        data: {
+          person: personMap[pid],
+          isPending: personMap[pid].status === 'pending',
+          onViewDetails: callbacks.onViewDetails,
+          onAddSpouse: callbacks.onAddSpouse,
+          onAddChild: callbacks.onAddChild,
+        },
       });
     });
 
@@ -154,39 +173,12 @@ export function buildLayout(persons, relationships) {
     const unique = [...new Map(childUnits.map(u => [u.id, u])).values()];
 
     if (unique.length > 0) {
-      // Parent connection point (center of couple or single)
-      let parentCenterX;
-      if (ordered.length === 2) {
-        const p1 = personPositions[ordered[0]];
-        const p2 = personPositions[ordered[1]];
-        parentCenterX = (p1.x + NODE_W + p2.x) / 2;
-      } else {
-        parentCenterX = personPositions[ordered[0]].x + NODE_W / 2;
-      }
-      // Start from marriage line level for couples, bottom of node for singles
-      const parentBottomY = ordered.length === 2 ? y + NODE_H / 2 : y + NODE_H;
-
-      let childX = startX;
       const childY = y + NODE_H + V_GAP;
+      let childX = startX;
 
       unique.forEach(cu => {
         const cuW = getUnitWidth(cu);
         positionUnit(cu, childX, childY);
-
-        // Find the actual child person in this unit (the one in our children list)
-        const actualChildId = cu.members.find(mid => unit.children.includes(mid)) || cu.members[0];
-        const actualChildPos = personPositions[actualChildId];
-
-        if (actualChildPos) {
-          connectors.push({
-            type: 'parent-child',
-            parentX: parentCenterX,
-            parentY: parentBottomY,
-            childX: actualChildPos.x + NODE_W / 2,  // center of the actual child node
-            childY: actualChildPos.y,                 // top edge of the actual child node
-          });
-        }
-
         childX += cuW + H_GAP;
       });
     }
@@ -203,24 +195,57 @@ export function buildLayout(persons, relationships) {
     }
   });
 
-  // Marriage edges (React Flow handles these)
-  const rfEdges = [];
-  marriages.forEach(m => {
-    const pA = personMap[m.person_a_id];
-    const pB = personMap[m.person_b_id];
-    if (!personPositions[pA.id] || !personPositions[pB.id]) return;
-    const [left, right] = orderSpouses(pA, pB);
+  // === CONNECTORS ===
 
-    // Marriage connector data for SVG overlay
-    const p1 = personPositions[left.id];
-    const p2 = personPositions[right.id];
+  // Marriage lines + compute midpoints
+  const marriageMidpoints = {};
+
+  marriages.forEach(m => {
+    const p1 = personPositions[m.person_a_id];
+    const p2 = personPositions[m.person_b_id];
+    if (!p1 || !p2) return;
+
+    const leftX = Math.min(p1.x, p2.x);
+    const rightX = Math.max(p1.x, p2.x);
+
     connectors.push({
       type: 'marriage',
-      x1: p1.x + NODE_W,
+      x1: leftX + NODE_W,
       y1: p1.y + NODE_H / 2,
-      x2: p2.x,
+      x2: rightX,
       y2: p2.y + NODE_H / 2,
       marriage_status: m.marriage_status,
+    });
+
+    marriageMidpoints[m.id] = {
+      x: (leftX + NODE_W + rightX) / 2,
+      y: p1.y + NODE_H / 2,
+    };
+  });
+
+  // Parent-child connectors — drop from marriage midpoint or parent center
+  parentChild.forEach(pc => {
+    const childPos = personPositions[pc.person_b_id];
+    const parentPos = personPositions[pc.person_a_id];
+    if (!childPos || !parentPos) return;
+
+    let dropX, dropY;
+
+    if (pc.marriage_id && marriageMidpoints[pc.marriage_id]) {
+      const mid = marriageMidpoints[pc.marriage_id];
+      dropX = mid.x;
+      dropY = mid.y;
+    } else {
+      dropX = parentPos.x + NODE_W / 2;
+      dropY = parentPos.y + NODE_H;
+    }
+
+    connectors.push({
+      type: 'parent-child',
+      parentX: dropX,
+      parentY: dropY,
+      childX: childPos.x + NODE_W / 2,
+      childY: childPos.y,
     });
   });
 
@@ -249,7 +274,7 @@ export function buildLayout(persons, relationships) {
     maxX: globalMaxX,
   }));
 
-  return { nodes: rfNodes, edges: rfEdges, connectors, generationRows };
+  return { nodes: rfNodes, edges: [], connectors, generationRows };
 }
 
 function orderSpouses(a, b) {
