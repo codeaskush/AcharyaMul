@@ -75,28 +75,38 @@ export default function FamilyChartD3() {
     // === Connectors layer ===
     const connLayer = g.append('g').attr('class', 'connectors');
 
-    // Marriage lines
+    // Marriage lines using D3 horizontal link
+    const marriageLink = d3.linkHorizontal()
+      .x(d => d.x)
+      .y(d => d.y);
+
     connectors.filter(c => c.type === 'marriage').forEach(c => {
       const isDivorced = c.marriage_status === 'divorced';
 
-      // Clickable hitbox
+      // Clickable hitbox (straight line for easy clicking)
       connLayer.append('line')
         .attr('x1', c.x1).attr('y1', c.y1).attr('x2', c.x2).attr('y2', c.y2)
         .attr('stroke', 'transparent').attr('stroke-width', 14)
         .style('cursor', 'pointer')
         .on('click', () => handleMarriageClick(c));
 
-      // Visible line
-      connLayer.append('line')
-        .attr('x1', c.x1).attr('y1', c.y1).attr('x2', c.x2).attr('y2', c.y2)
+      // Visible curved marriage link
+      connLayer.append('path')
+        .attr('d', marriageLink({
+          source: { x: c.x1, y: c.y1 },
+          target: { x: c.x2, y: c.y2 },
+        }))
+        .attr('fill', 'none')
         .attr('stroke', isDivorced ? '#f87171' : '#fca5a5')
         .attr('stroke-width', 2)
         .attr('stroke-dasharray', isDivorced ? '6 4' : 'none')
         .style('pointer-events', 'none');
     });
 
-    // Parent-child T-connectors (grouped by drop point)
+    // Parent-child connectors using D3 link generators
     const pcConnectors = connectors.filter(c => c.type === 'parent-child');
+
+    // Group by drop point (each marriage midpoint)
     const groups = {};
     pcConnectors.forEach(c => {
       const key = `${c.parentX},${c.parentY}`;
@@ -104,40 +114,61 @@ export default function FamilyChartD3() {
       groups[key].children.push({ x: c.childX, y: c.childY });
     });
 
+    // D3 link generator — creates smooth elbow/step paths
+    // Custom path: vertical down from parent, then elbow to child
+    const elbowLink = (source, target) => {
+      const midY = source.y + (target.y - source.y) / 2;
+      return `M ${source.x},${source.y} L ${source.x},${midY} L ${target.x},${midY} L ${target.x},${target.y}`;
+    };
+
+    // D3 curved vertical link generator for single-child case
+    const curvedLink = d3.linkVertical()
+      .x(d => d.x)
+      .y(d => d.y);
+
     Object.values(groups).forEach(group => {
       const { parentX, parentY, children } = group;
       if (children.length === 0) return;
-      const childY = children[0].y;
-      const barY = parentY + (childY - parentY) / 2;
-      const childXs = children.map(c => c.x);
-      const minChildX = Math.min(...childXs);
-      const maxChildX = Math.max(...childXs);
 
-      // Vertical drop
-      connLayer.append('line')
-        .attr('x1', parentX).attr('y1', parentY).attr('x2', parentX).attr('y2', barY)
-        .attr('stroke', '#9ca3af').attr('stroke-width', 1.5);
+      if (children.length === 1) {
+        // Single child: use D3 curved vertical link (smooth bezier)
+        connLayer.append('path')
+          .attr('d', curvedLink({
+            source: { x: parentX, y: parentY },
+            target: { x: children[0].x, y: children[0].y },
+          }))
+          .attr('fill', 'none')
+          .attr('stroke', '#9ca3af')
+          .attr('stroke-width', 1.5);
+      } else {
+        // Multiple children: use T-connector pattern with D3 paths
+        const childY = children[0].y;
+        const barY = parentY + (childY - parentY) / 2;
+        const childXs = children.map(c => c.x);
+        const minChildX = Math.min(...childXs);
+        const maxChildX = Math.max(...childXs);
 
-      // Horizontal bar
-      if (children.length > 1) {
-        connLayer.append('line')
-          .attr('x1', minChildX).attr('y1', barY).attr('x2', maxChildX).attr('y2', barY)
-          .attr('stroke', '#9ca3af').attr('stroke-width', 1.5);
-      }
+        // Single path for the entire T-connector: drop → bar → drops
+        let pathD = `M ${parentX},${parentY} L ${parentX},${barY}`;
 
-      // Vertical drops to children
-      children.forEach(child => {
-        connLayer.append('line')
-          .attr('x1', child.x).attr('y1', barY).attr('x2', child.x).attr('y2', child.y)
-          .attr('stroke', '#9ca3af').attr('stroke-width', 1.5);
-      });
+        // Horizontal bar extension if parent is offset
+        if (parentX > minChildX) {
+          pathD += ` M ${parentX},${barY} L ${minChildX},${barY}`;
+        }
+        if (parentX < maxChildX) {
+          pathD += ` M ${parentX},${barY} L ${maxChildX},${barY}`;
+        }
 
-      // Connect offset parent to bar
-      if (parentX < minChildX || parentX > maxChildX) {
-        connLayer.append('line')
-          .attr('x1', parentX).attr('y1', barY)
-          .attr('x2', parentX < minChildX ? minChildX : maxChildX).attr('y2', barY)
-          .attr('stroke', '#9ca3af').attr('stroke-width', 1.5);
+        // Vertical drops to each child
+        children.forEach(child => {
+          pathD += ` M ${child.x},${barY} L ${child.x},${child.y}`;
+        });
+
+        connLayer.append('path')
+          .attr('d', pathD)
+          .attr('fill', 'none')
+          .attr('stroke', '#9ca3af')
+          .attr('stroke-width', 1.5);
       }
     });
 
