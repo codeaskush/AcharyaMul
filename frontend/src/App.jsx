@@ -5,7 +5,7 @@ import { GraphProvider } from '@/contexts/GraphContext';
 import { LanguageProvider, useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import PersonListPage from '@/features/person/PersonListPage';
-import FamilyChart from '@/features/chart/FamilyChart';
+import FamilyChart from '@/features/chart/FamilyChartD3';
 import CalculatorPage from '@/features/calculator/Calculator';
 import { Toaster } from '@/components/ui/sonner';
 import '@/styles/global.css';
