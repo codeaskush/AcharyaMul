@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { personApi } from '@/api/client';
-import PersonDetail from './PersonDetail';
-import PersonForm from './PersonForm';
+import PersonDetailWide from './PersonDetailWide';
+import PersonFormWide from './PersonFormWide';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
@@ -295,16 +295,15 @@ export default function PersonListPage() {
         </Card>
       )}
 
-      {/* Detail Sheet */}
-      {selectedPerson && <PersonDetail person={selectedPerson} onClose={() => setSelectedPerson(null)} onEdit={handleEdit} />}
+      {/* Detail View */}
+      {selectedPerson && <PersonDetailWide person={selectedPerson} onClose={() => setSelectedPerson(null)} onEdit={handleEdit} />}
 
-      {/* Add/Edit Sheet */}
-      <Sheet open={showForm} onOpenChange={(open) => { if (!open) handleCancel(); }}>
-        <SheetContent className="w-[30vw] sm:max-w-[30vw] overflow-y-auto p-0">
-          <SheetTitle className="sr-only">{editPerson ? t('actions.edit') : t('actions.add_person')}</SheetTitle>
-          <PersonForm person={editPerson} onSave={handleSave} onCancel={handleCancel} />
-        </SheetContent>
-      </Sheet>
+      {/* Add/Edit Dialog — 70% screen */}
+      <Dialog open={showForm} onOpenChange={(open) => { if (!open) handleCancel(); }}>
+        <DialogContent showCloseButton={false} className="!max-w-[95vw] !w-[95vw] !h-[90vh] !p-0 overflow-hidden flex flex-col">
+          <PersonFormWide person={editPerson} onSave={handleSave} onCancel={handleCancel} />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

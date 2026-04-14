@@ -37,6 +37,8 @@ export const personApi = {
   create: (data) => post('/persons', data),
   update: (id, data) => put(`/persons/${id}`, data),
   updateVisibility: (id, data) => put(`/persons/${id}/visibility`, data),
+  getLifeEvents: (id) => get(`/persons/${id}/life-events`),
+  bulkSaveLifeEvents: (id, events) => put(`/persons/${id}/life-events/bulk`, events),
 };
 
 export const relationshipApi = {

@@ -116,13 +116,16 @@ export function ConnectorsSvg({ connectors, onMarriageClick }) {
 
 /**
  * Fixed generation labels — pinned to left edge, vertically centered.
- * Plain text, rotated 90 degrees anticlockwise.
+ * Shows abbreviated "G1", "G2" etc. when zoomed out to prevent overlap,
+ * and full "Generation 1" when zoomed in enough (scale > 0.6).
  */
 export function GenerationLabels({ generationRows }) {
   const transform = useStore((s) => s.transform);
   const [tx, ty, scale] = transform;
 
   if (!generationRows || generationRows.length === 0) return null;
+
+  const useShortLabel = scale < 0.6;
 
   return (
     <div
@@ -137,7 +140,7 @@ export function GenerationLabels({ generationRows }) {
         overflow: 'hidden',
       }}
     >
-      {generationRows.map(({ generation, y, nextY }) => {
+      {generationRows.map(({ generation, y }) => {
         const NODE_H = 70;
         const midY = y + NODE_H / 2;
         const screenY = ty + midY * scale;
@@ -149,13 +152,12 @@ export function GenerationLabels({ generationRows }) {
               position: 'absolute',
               left: 10,
               top: screenY,
-              transform: 'translateY(-50%)',
               writingMode: 'vertical-rl',
               transform: 'translateY(-50%) rotate(180deg)',
             }}
           >
             <span className="text-[10px] font-medium text-gray-300 tracking-[0.2em] uppercase whitespace-nowrap select-none">
-              Generation {generation}
+              {useShortLabel ? `G${generation}` : `Generation ${generation}`}
             </span>
           </div>
         );

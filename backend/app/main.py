@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.api import auth, persons, relationships, contributions, calculator, users, graph, backup
+from app.api import auth, persons, relationships, contributions, calculator, users, graph, backup, life_events
 from app.database import init_db
 
 app = FastAPI(
@@ -31,6 +31,7 @@ app.include_router(calculator.router, prefix="/api/v1/calculator", tags=["calcul
 app.include_router(users.router, prefix="/api/v1/users", tags=["users"])
 app.include_router(graph.router, prefix="/api/v1/graph", tags=["graph"])
 app.include_router(backup.router, prefix="/api/v1/backup", tags=["backup"])
+app.include_router(life_events.router, prefix="/api/v1", tags=["life-events"])
 
 
 @app.on_event("startup")

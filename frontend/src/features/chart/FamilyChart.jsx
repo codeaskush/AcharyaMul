@@ -16,7 +16,7 @@ import AddRelationshipDialog from './AddRelationshipDialog';
 import { buildLayout } from './layoutEngine';
 import { graphApi, relationshipApi } from '@/api/client';
 import mockData from './mockData.json';
-import PersonDetail from '@/features/person/PersonDetail';
+import PersonDetailWide from '@/features/person/PersonDetailWide';
 import { Loader2 } from 'lucide-react';
 
 const USE_MOCK = false;
@@ -139,7 +139,7 @@ function FamilyChartInner() {
       </ReactFlow>
 
       {selectedPerson && (
-        <PersonDetail person={selectedPerson} onClose={() => setSelectedPerson(null)} />
+        <PersonDetailWide person={selectedPerson} onClose={() => setSelectedPerson(null)} />
       )}
 
       <AddRelationshipDialog
