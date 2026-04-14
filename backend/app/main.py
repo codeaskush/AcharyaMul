@@ -1,17 +1,21 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 
 from app.config import settings
 from app.api import auth, persons, relationships, contributions, calculator, users, graph, backup, life_events
 from app.database import init_db
 
 app = FastAPI(
-    title="rootslegx API",
+    title="Acharyamul API",
     description="Collaborative family tree API for the Acharya family",
     version="1.0.0",
     docs_url="/api/docs" if settings.app_env == "development" else None,
     redoc_url="/api/redoc" if settings.app_env == "development" else None,
 )
+
+# Session middleware — required for OAuth state parameter
+app.add_middleware(SessionMiddleware, secret_key=settings.jwt_secret)
 
 # CORS
 app.add_middleware(

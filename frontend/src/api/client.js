@@ -29,6 +29,7 @@ const del = (path) => request('DELETE', path);
 export const authApi = {
   login: () => get('/auth/google'),
   me: () => get('/auth/me'),
+  logout: () => post('/auth/logout'),
 };
 
 export const personApi = {

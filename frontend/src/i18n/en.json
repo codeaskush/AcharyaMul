@@ -81,6 +81,23 @@
     "rate_limit_reached": "Rate limit reached. Please wait for your existing submissions to be reviewed.",
     "access_denied": "Access denied — contact your family admin"
   },
+  "auth": {
+    "login_subtitle": "Sign in to access the family tree",
+    "login_hint": "Only authorized family members can access this app. Contact the admin if you need an invitation."
+  },
+  "admin": {
+    "subtitle": "Manage family member access and roles",
+    "invite": "Invite Member",
+    "invite_title": "Invite Family Member",
+    "send_invite": "Send Invite",
+    "email": "Email",
+    "name": "Name",
+    "role": "Role",
+    "status": "Status",
+    "last_login": "Last Login",
+    "accepted": "Accepted",
+    "pending": "Pending"
+  },
   "chart": {
     "no_members": "No family members yet",
     "no_members_hint": "Go to Members tab to add the first person.",
