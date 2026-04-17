@@ -15,6 +15,10 @@ class Settings(BaseSettings):
     jwt_algorithm: str = "HS256"
     jwt_expiry_hours: int = 24
 
+    # Dev Admin (local login bypass)
+    dev_admin_username: str = "admin"
+    dev_admin_password: str = "admin123"
+
     # App
     app_env: str = "development"
     app_url: str = "http://localhost"

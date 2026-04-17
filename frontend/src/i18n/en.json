@@ -1,14 +1,45 @@
 {
-  "app_name": "rootslegx",
-  "app_subtitle": "Acharya Family Tree",
+  "app_name": "आचार्यमूल",
   "nav": {
+    "home": "Home",
     "chart": "Family Chart",
     "members": "Members",
     "calculator": "Calculator",
+    "analytics": "Analytics",
     "admin": "Admin Panel",
     "my_contributions": "My Contributions",
     "login": "Login with Google",
     "logout": "Logout"
+  },
+  "home": {
+    "hero_family": "Acharya Family",
+    "hero_title": "Welcome to आचार्यमूल",
+    "hero_description": "Preserving our heritage, connecting generations. Explore the family tree, relive memories, and stay connected with the Acharya family.",
+    "explore_tree": "Explore Family Tree",
+    "view_members": "View Members",
+    "news_title": "Recent News & Updates",
+    "news_subtitle": "Latest happenings in the family",
+    "events_title": "Upcoming Events",
+    "events_subtitle": "Countdown to family events",
+    "events_days": "days",
+    "events_none": "No upcoming events",
+    "history_title": "Our History",
+    "history_subtitle": "Stories from the family's past",
+    "literature_title": "Literature",
+    "literature_subtitle": "Writings and works by family members",
+    "gallery_title": "Gallery — Old is Gold",
+    "gallery_subtitle": "Cherished photographs from our family archive",
+    "gallery_cta": "Have old family photos? Contact the admin to add them to the archive.",
+    "read_more": "Read more",
+    "back_home": "Back to Home",
+    "days_to_go": "days to go",
+    "today": "Today is the day!",
+    "days_until": "{{count}} day until this event",
+    "days_until_plural": "{{count}} days until this event",
+    "countdown": "Countdown",
+    "past_event": "Past Event",
+    "article_not_found": "Article not found.",
+    "event_not_found": "Event not found."
   },
   "actions": {
     "add_person": "Add Person",
@@ -50,5 +81,48 @@
     "request_submitted": "Request submitted for review",
     "rate_limit_reached": "Rate limit reached. Please wait for your existing submissions to be reviewed.",
     "access_denied": "Access denied — contact your family admin"
+  },
+  "auth": {
+    "login_subtitle": "Sign in to access the family tree",
+    "login_hint": "Only authorized family members can access this app. Contact the admin if you need an invitation."
+  },
+  "contribute": {
+    "correction_title": "Suggest a Correction",
+    "which_field": "Which field is incorrect?",
+    "corrected_value": "Corrected Value (optional)",
+    "message": "Message",
+    "flag_title": "Flag an Issue",
+    "flag_description": "Describe what seems incorrect about this relationship. An admin will review your message.",
+    "send_flag": "Send to Admin",
+    "message_sent": "Message sent to admin"
+  },
+  "admin": {
+    "menu_user_mgmt": "User Management",
+    "menu_contrib_mgmt": "Contribution Management",
+    "tab_access": "Access Management",
+    "tab_activity": "Activity Log",
+    "tab_requests": "Incoming Requests",
+    "tab_drafts": "Drafts",
+    "tab_quarantine": "Quarantine",
+    "tab_eoi": "Expression of Interest",
+    "menu_platform": "Platform Settings",
+    "tab_platform_settings": "Database & Seed",
+    "subtitle": "Manage family member access and roles",
+    "invite": "Invite Member",
+    "invite_title": "Invite Family Member",
+    "send_invite": "Send Invite",
+    "email": "Email",
+    "name": "Name",
+    "role": "Role",
+    "status": "Status",
+    "last_login": "Last Login",
+    "accepted": "Accepted",
+    "pending": "Pending"
+  },
+  "chart": {
+    "no_members": "No family members yet",
+    "no_members_hint": "Go to Members tab to add the first person.",
+    "horizontal": "Horizontal",
+    "vertical": "Vertical"
   }
 }

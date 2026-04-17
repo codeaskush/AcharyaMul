@@ -5,8 +5,11 @@ from app.database import get_db
 from app.dependencies import get_current_user
 from app.models.user import User
 from app.models.enums import Role
+from pydantic import BaseModel, Field
 from app.schemas.person import PersonCreate, PersonUpdate
+from app.models.enums import ApprovalStatus
 from app.services import person_service, revision_service, photo_service
+from app.services.admin_log_service import log_action
 
 router = APIRouter()
 
@@ -33,11 +36,26 @@ def list_persons(
     current_user: User = Depends(get_current_user),
 ):
     is_admin = current_user.role == Role.admin
-    persons, total = person_service.get_all_persons(db, page, per_page, sort_by)
+    is_viewer = current_user.role == Role.viewer
+    persons, total = person_service.get_all_persons(db, page, per_page, sort_by, approved_only=is_viewer)
     return {
         "data": [person_service.serialize_person(p, is_admin=is_admin) for p in persons],
         "pagination": {"page": page, "per_page": per_page, "total": total},
     }
+
+
+@router.get("/quarantined")
+def list_quarantined(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """List all quarantined persons. Admin only."""
+    if current_user.role != Role.admin:
+        raise HTTPException(status_code=403, detail="Only admins can view quarantined persons")
+
+    from app.models.person import Person
+    persons = db.query(Person).filter(Person.status == ApprovalStatus.quarantined).order_by(Person.first_name).all()
+    return {"data": [person_service.serialize_person(p, is_admin=True) for p in persons]}
 
 
 @router.get("/{person_id}")
@@ -146,3 +164,89 @@ async def upload_photo(
     db.refresh(person)
 
     return {"data": person_service.serialize_person(person, is_admin=True)}
+
+
+class QuarantineRequest(BaseModel):
+    reason: str = Field(..., min_length=1)
+
+
+@router.put("/{person_id}/quarantine")
+def quarantine_person(
+    person_id: int,
+    data: QuarantineRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Soft-delete: set person status to pending (quarantine for review)."""
+    if current_user.role != Role.admin:
+        raise HTTPException(status_code=403, detail="Only admins can quarantine persons")
+
+    person = person_service.get_person_by_id(db, person_id)
+    if not person:
+        raise HTTPException(status_code=404, detail="Person not found")
+
+    person.status = ApprovalStatus.quarantined
+    log_action(db, current_user, action="person_quarantined", target_type="person", target_id=person_id,
+               details={"name": f"{person.first_name} {person.last_name or ''}".strip()}, comment=data.reason)
+    db.commit()
+    db.refresh(person)
+    return {"data": person_service.serialize_person(person, is_admin=True)}
+
+
+@router.put("/{person_id}/restore")
+def restore_person(
+    person_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Restore a quarantined person back to approved."""
+    if current_user.role != Role.admin:
+        raise HTTPException(status_code=403, detail="Only admins can restore persons")
+
+    person = person_service.get_person_by_id(db, person_id)
+    if not person:
+        raise HTTPException(status_code=404, detail="Person not found")
+
+    person.status = ApprovalStatus.approved
+    person.approved_by_id = current_user.id
+    log_action(db, current_user, action="person_restored", target_type="person", target_id=person_id,
+               details={"name": f"{person.first_name} {person.last_name or ''}".strip()})
+    db.commit()
+    db.refresh(person)
+    return {"data": person_service.serialize_person(person, is_admin=True)}
+
+
+@router.put("/{person_id}/soft-delete")
+def soft_delete_person(
+    person_id: int,
+    data: QuarantineRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Permanently remove a quarantined person from the tree."""
+    if current_user.role != Role.admin:
+        raise HTTPException(status_code=403, detail="Only admins can delete persons")
+
+    person = person_service.get_person_by_id(db, person_id)
+    if not person:
+        raise HTTPException(status_code=404, detail="Person not found")
+
+    if person.status != ApprovalStatus.quarantined:
+        raise HTTPException(status_code=400, detail="Person must be quarantined before deletion")
+
+    log_action(db, current_user, action="person_deleted", target_type="person", target_id=person_id,
+               details={"name": f"{person.first_name} {person.last_name or ''}"}, comment=data.reason)
+
+    # Delete related relationships
+    from app.models.relationship import Relationship
+    db.query(Relationship).filter(
+        (Relationship.person_a_id == person_id) | (Relationship.person_b_id == person_id)
+    ).delete(synchronize_session=False)
+
+    # Delete life events
+    from app.models.life_event import LifeEvent
+    db.query(LifeEvent).filter(LifeEvent.person_id == person_id).delete(synchronize_session=False)
+
+    db.delete(person)
+    db.commit()
+    return {"data": {"deleted": True}}

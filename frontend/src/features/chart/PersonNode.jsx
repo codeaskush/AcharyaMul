@@ -12,7 +12,7 @@ const genderColors = {
 };
 
 function PersonNode({ data, selected }) {
-  const { person, isPending, onViewDetails, onAddSpouse, onAddChild } = data;
+  const { person, isPending, canEdit, onViewDetails, onAddSpouse, onAddChild } = data;
   const [open, setOpen] = useState(false);
   const colors = genderColors[person.gender] || genderColors.other;
   const initials = ((person.first_name?.[0] || '') + (person.last_name?.[0] || '')).toUpperCase();
@@ -68,16 +68,20 @@ function PersonNode({ data, selected }) {
               <Eye className="h-3.5 w-3.5" />
               Details
             </Button>
-            <Separator orientation="vertical" className="h-5" />
-            <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => handleAction(onAddSpouse)}>
-              <Heart className="h-3.5 w-3.5 text-red-400" />
-              Spouse
-            </Button>
-            <Separator orientation="vertical" className="h-5" />
-            <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => handleAction(onAddChild)}>
-              <Baby className="h-3.5 w-3.5 text-blue-400" />
-              Child
-            </Button>
+            {canEdit !== false && (
+              <>
+                <Separator orientation="vertical" className="h-5" />
+                <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => handleAction(onAddSpouse)}>
+                  <Heart className="h-3.5 w-3.5 text-red-400" />
+                  Spouse
+                </Button>
+                <Separator orientation="vertical" className="h-5" />
+                <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => handleAction(onAddChild)}>
+                  <Baby className="h-3.5 w-3.5 text-blue-400" />
+                  Child
+                </Button>
+              </>
+            )}
           </div>
         </PopoverContent>
       </Popover>

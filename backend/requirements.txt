@@ -12,3 +12,4 @@ python-multipart==0.0.18
 slowapi==0.1.9
 nepali-datetime==1.0.7
 pillow==11.1.0
+itsdangerous==2.2.0

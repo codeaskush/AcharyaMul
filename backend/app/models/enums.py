@@ -21,11 +21,13 @@ class RelationshipType(str, enum.Enum):
 class MarriageStatus(str, enum.Enum):
     active = "active"
     divorced = "divorced"
+    separated = "separated"
 
 
 class ApprovalStatus(str, enum.Enum):
     approved = "approved"
     pending = "pending"
+    quarantined = "quarantined"
 
 
 class ContributionType(str, enum.Enum):
@@ -37,6 +39,7 @@ class ContributionType(str, enum.Enum):
 
 class ContributionStatus(str, enum.Enum):
     pending = "pending"
+    draft = "draft"
     approved = "approved"
     approved_with_changes = "approved_with_changes"
     rejected = "rejected"

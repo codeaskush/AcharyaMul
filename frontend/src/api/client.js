@@ -24,11 +24,13 @@ async function request(method, path, body = null) {
 const get = (path) => request('GET', path);
 const post = (path, body) => request('POST', path, body);
 const put = (path, body) => request('PUT', path, body);
-const del = (path) => request('DELETE', path);
+const del = (path, body) => request('DELETE', path, body);
 
 export const authApi = {
   login: () => get('/auth/google'),
+  devLogin: (username, password) => post('/auth/dev-login', { username, password }),
   me: () => get('/auth/me'),
+  logout: () => post('/auth/logout'),
 };
 
 export const personApi = {
@@ -37,18 +39,31 @@ export const personApi = {
   create: (data) => post('/persons', data),
   update: (id, data) => put(`/persons/${id}`, data),
   updateVisibility: (id, data) => put(`/persons/${id}/visibility`, data),
+  getLifeEvents: (id) => get(`/persons/${id}/life-events`),
+  bulkSaveLifeEvents: (id, events) => put(`/persons/${id}/life-events/bulk`, events),
+  quarantine: (id, data) => put(`/persons/${id}/quarantine`, data),
+  restore: (id) => put(`/persons/${id}/restore`),
+  getQuarantined: () => get('/persons/quarantined'),
+  softDelete: (id, data) => put(`/persons/${id}/soft-delete`, data),
 };
 
 export const relationshipApi = {
   create: (data) => post('/relationships', data),
+  getById: (id) => get(`/relationships/${id}`),
   update: (id, data) => put(`/relationships/${id}`, data),
   getMarriagesFor: (personId) => get(`/relationships/marriages/${personId}`),
+  getParentsFor: (childId) => get(`/relationships/parents/${childId}`),
+  deleteRelationship: (id, data) => put(`/relationships/${id}/delete`, data),
 };
 
 export const contributionApi = {
-  submit: (data) => post('/contributions', data),
+  submitFieldEdit: (data) => post('/contributions/field-edit', data),
+  submitPersonAdd: (data) => post('/contributions/person-add', data),
+  submitRelationshipAdd: (data) => post('/contributions/relationship-add', data),
+  submitMessage: (data) => post('/contributions/message', data),
   getMyContributions: () => get('/contributions/mine'),
   getPending: (params = '') => get(`/contributions/pending${params}`),
+  getDrafts: (params = '') => get(`/contributions/drafts${params}`),
   review: (id, data) => put(`/contributions/${id}/review`, data),
 };
 
@@ -66,6 +81,27 @@ export const userApi = {
 
 export const graphApi = {
   getFullGraph: () => get('/graph'),
+};
+
+export const contributionRequestApi = {
+  submit: (data) => post('/contribution-requests', data),
+  getMine: () => get('/contribution-requests/mine'),
+  getPending: () => get('/contribution-requests/pending'),
+  review: (id, data) => put(`/contribution-requests/${id}/review`, data),
+};
+
+export const adminLogApi = {
+  getAll: (limit = 100) => get(`/admin-logs?limit=${limit}`),
+};
+
+export const analyticsApi = {
+  get: () => get('/analytics'),
+};
+
+export const platformApi = {
+  clearDatabase: () => post('/platform/clear-database'),
+  loadSeed: () => post('/platform/load-seed'),
+  syncSeed: () => post('/platform/sync-seed'),
 };
 
 export const backupApi = {

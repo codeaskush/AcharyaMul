@@ -11,21 +11,6 @@ from app.models.enums import Role, InviteStatus
 
 
 def get_current_user(request: Request, db: Session = Depends(get_db)) -> User:
-    # Dev bypass — auto-create and return admin user in development mode
-    if settings.app_env == "development":
-        user = db.query(User).filter(User.email == "dev@admin.local").first()
-        if not user:
-            user = User(
-                email="dev@admin.local",
-                display_name="Dev Admin",
-                role=Role.admin,
-                invite_status=InviteStatus.accepted,
-            )
-            db.add(user)
-            db.commit()
-            db.refresh(user)
-        return user
-
     token = request.cookies.get("access_token")
     if not token:
         raise HTTPException(
