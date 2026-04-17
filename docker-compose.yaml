@@ -8,7 +8,6 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
@@ -20,6 +19,8 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     restart: unless-stopped
+    ports:
+      - "8000:8000"
     environment:
       DATABASE_URL: ${DATABASE_URL}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
@@ -38,18 +39,7 @@ services:
         condition: service_healthy
     volumes:
       - photo_uploads:/app/uploads
-
-  nginx:
-    image: nginx:alpine
-    restart: unless-stopped
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - frontend_build:/usr/share/nginx/html:ro
-      - photo_uploads:/app/uploads:ro
-    depends_on:
-      - api
+      - frontend_build:/app/static
 
   frontend:
     build:
@@ -58,25 +48,7 @@ services:
     volumes:
       - frontend_build:/app/dist
 
-  backup:
-    image: postgres:16-alpine
-    restart: unless-stopped
-    environment:
-      PGHOST: db
-      PGUSER: ${POSTGRES_USER}
-      PGPASSWORD: ${POSTGRES_PASSWORD}
-      PGDATABASE: ${POSTGRES_DB}
-      BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-30}
-    volumes:
-      - ./scripts/backup.sh:/backup.sh:ro
-      - backup_data:/backups
-    depends_on:
-      db:
-        condition: service_healthy
-    entrypoint: ["/bin/sh", "-c", "chmod +x /backup.sh && crond -f -l 2"]
-
 volumes:
   postgres_data:
   photo_uploads:
   frontend_build:
-  backup_data:

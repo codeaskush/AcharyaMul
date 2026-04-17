@@ -1,5 +1,10 @@
-from fastapi import FastAPI
+import os
+from pathlib import Path
+
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from starlette.middleware.sessions import SessionMiddleware
 
 from app.config import settings
@@ -51,3 +56,17 @@ def on_startup():
 @app.get("/api/v1/health")
 def health_check():
     return {"status": "ok"}
+
+
+# Serve frontend static files (built by frontend container into /app/static)
+STATIC_DIR = Path("/app/static")
+if STATIC_DIR.exists() and (STATIC_DIR / "index.html").exists():
+    app.mount("/assets", StaticFiles(directory=str(STATIC_DIR / "assets")), name="assets")
+
+    @app.get("/{full_path:path}")
+    async def serve_frontend(request: Request, full_path: str):
+        """Serve frontend SPA — all non-API routes return index.html."""
+        file_path = STATIC_DIR / full_path
+        if file_path.is_file():
+            return FileResponse(str(file_path))
+        return FileResponse(str(STATIC_DIR / "index.html"))
