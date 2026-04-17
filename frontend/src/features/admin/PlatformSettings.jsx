@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { platformApi } from '@/api/client';
 import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Trash2, Database, RefreshCw, AlertTriangle } from 'lucide-react';
+import { Loader2, Trash2, Database, RefreshCw, AlertTriangle, Download } from 'lucide-react';
 import { toast } from 'sonner';
 
 function ActionCard({ icon: Icon, title, description, buttonLabel, buttonVariant, color, confirmText, onAction }) {
@@ -145,6 +146,54 @@ export default function PlatformSettings() {
           color="bg-green-100 text-green-600"
           onAction={platformApi.syncSeed}
         />
+      </div>
+
+      <Separator />
+
+      {/* Export Section */}
+      <div>
+        <h3 className="text-lg font-semibold">Data Export</h3>
+        <p className="text-sm text-muted-foreground mt-1">Download family data as CSV files.</p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 bg-indigo-100 text-indigo-600">
+                <Download className="h-5 w-5" />
+              </div>
+              <div>
+                <CardTitle className="text-base">Export Members</CardTitle>
+                <CardDescription className="mt-1">Download all approved family members with names (Roman + Devanagari), dates (AD + BS), gender, occupation, address, and status.</CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <Button variant="outline" size="sm" asChild>
+              <a href="/api/v1/backup/export/members" download>Download Members CSV</a>
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 bg-indigo-100 text-indigo-600">
+                <Download className="h-5 w-5" />
+              </div>
+              <div>
+                <CardTitle className="text-base">Export Relationships</CardTitle>
+                <CardDescription className="mt-1">Download all relationships (marriages and parent-child links) with person names, marriage status, dates, and locations.</CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <Button variant="outline" size="sm" asChild>
+              <a href="/api/v1/backup/export/relationships" download>Download Relationships CSV</a>
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
