@@ -17,12 +17,13 @@ def get_full_graph(
 ):
     """Return all persons and relationships for chart rendering."""
     is_admin = current_user.role == Role.admin
-    persons, _ = person_service.get_all_persons(db, page=1, per_page=10000)
-    relationships = relationship_service.get_all_relationships(db)
+    is_viewer = current_user.role == Role.viewer
+    persons, _ = person_service.get_all_persons(db, page=1, per_page=10000, approved_only=is_viewer)
+    relationships = relationship_service.get_all_relationships(db, include_pending=not is_viewer)
 
     return {
         "data": {
             "persons": [person_service.serialize_person(p, is_admin=is_admin) for p in persons],
-            "relationships": [relationship_service.serialize_relationship(r) for r in relationships],
+            "relationships": [relationship_service.serialize_relationship(r, db) for r in relationships],
         }
     }

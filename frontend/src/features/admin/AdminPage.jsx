@@ -1,216 +1,116 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { userApi } from '@/api/client';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
-} from '@/components/ui/table';
-import { Loader2, Plus, UserPlus, Trash2, Shield } from 'lucide-react';
-import { toast } from 'sonner';
+import { Users, UserCog, ClipboardList, Inbox, FileText, ShieldAlert, HandHeart, ChevronDown, ChevronRight, GitPullRequest, Settings } from 'lucide-react';
+import UserManagement from './UserManagement';
+import RequestQueue from './RequestQueue';
+import DraftManagement from './DraftManagement';
+import QuarantineManagement from './QuarantineManagement';
+import ContributionRequests from './ContributionRequests';
+import ActivityLog from './ActivityLog';
+import PlatformSettings from './PlatformSettings';
 
-const ROLE_COLORS = {
-  admin: 'bg-amber-100 text-amber-800 border-amber-300',
-  contributor: 'bg-blue-100 text-blue-800 border-blue-300',
-  viewer: 'bg-gray-100 text-gray-600 border-gray-300',
-};
-
-function formatDate(dateStr) {
-  if (!dateStr) return '—';
-  return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-}
+const MENU = [
+  {
+    id: 'user_mgmt',
+    icon: Users,
+    labelKey: 'admin.menu_user_mgmt',
+    children: [
+      { id: 'access', icon: UserCog, labelKey: 'admin.tab_access' },
+      { id: 'activity', icon: ClipboardList, labelKey: 'admin.tab_activity' },
+    ],
+  },
+  {
+    id: 'contrib_mgmt',
+    icon: GitPullRequest,
+    labelKey: 'admin.menu_contrib_mgmt',
+    children: [
+      { id: 'requests', icon: Inbox, labelKey: 'admin.tab_requests' },
+      { id: 'drafts', icon: FileText, labelKey: 'admin.tab_drafts' },
+      { id: 'quarantine', icon: ShieldAlert, labelKey: 'admin.tab_quarantine' },
+      { id: 'eoi', icon: HandHeart, labelKey: 'admin.tab_eoi' },
+    ],
+  },
+  {
+    id: 'platform',
+    icon: Settings,
+    labelKey: 'admin.menu_platform',
+    children: [
+      { id: 'platform_settings', icon: Settings, labelKey: 'admin.tab_platform_settings' },
+    ],
+  },
+];
 
 export default function AdminPage() {
   const { t } = useTranslation();
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [inviteOpen, setInviteOpen] = useState(false);
-  const [inviteEmail, setInviteEmail] = useState('');
-  const [inviteRole, setInviteRole] = useState('viewer');
-  const [inviteLoading, setInviteLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('access');
+  const [expandedMenus, setExpandedMenus] = useState(['user_mgmt', 'contrib_mgmt', 'platform']);
 
-  const fetchUsers = async () => {
-    setLoading(true);
-    try {
-      const res = await userApi.getAll();
-      setUsers(res.data || []);
-    } catch (err) {
-      toast.error('Failed to load users');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => { fetchUsers(); }, []);
-
-  const handleInvite = async (e) => {
-    e.preventDefault();
-    setInviteLoading(true);
-    try {
-      await userApi.invite({ email: inviteEmail.trim(), role: inviteRole });
-      toast.success(`Invited ${inviteEmail}`);
-      setInviteEmail('');
-      setInviteRole('viewer');
-      setInviteOpen(false);
-      fetchUsers();
-    } catch (err) {
-      toast.error(err.detail || 'Failed to invite user');
-    } finally {
-      setInviteLoading(false);
-    }
-  };
-
-  const handleRoleChange = async (userId, newRole) => {
-    try {
-      await userApi.update(userId, { role: newRole });
-      toast.success('Role updated');
-      fetchUsers();
-    } catch (err) {
-      toast.error(err.detail || 'Failed to update role');
-    }
-  };
-
-  const handleRevoke = async (user) => {
-    if (!confirm(`Remove access for ${user.email}? This cannot be undone.`)) return;
-    try {
-      await userApi.remove(user.id);
-      toast.success(`Access revoked for ${user.email}`);
-      fetchUsers();
-    } catch (err) {
-      toast.error(err.detail || 'Failed to revoke access');
-    }
+  const toggleMenu = (menuId) => {
+    setExpandedMenus(prev =>
+      prev.includes(menuId) ? prev.filter(id => id !== menuId) : [...prev, menuId]
+    );
   };
 
   return (
-    <div className="p-6 max-w-5xl mx-auto space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">{t('nav.admin')}</h1>
-          <p className="text-sm text-muted-foreground mt-1">{t('admin.subtitle')}</p>
-        </div>
-        <Button onClick={() => setInviteOpen(true)} className="gap-1.5">
-          <UserPlus className="h-4 w-4" />
-          {t('admin.invite')}
-        </Button>
+    <div className="flex h-[calc(100vh-3.5rem)]">
+      {/* Sidebar */}
+      <div className="w-64 border-r bg-muted/30 p-3 space-y-1 shrink-0 overflow-y-auto">
+        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest px-3 py-2">
+          Admin
+        </p>
+
+        {MENU.map(group => {
+          const GroupIcon = group.icon;
+          const isExpanded = expandedMenus.includes(group.id);
+
+          return (
+            <div key={group.id}>
+              <button
+                onClick={() => toggleMenu(group.id)}
+                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-muted-foreground hover:bg-background/50 transition-colors"
+              >
+                <GroupIcon className="h-4 w-4" />
+                <span className="flex-1 text-left">{t(group.labelKey)}</span>
+                {isExpanded ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+              </button>
+
+              {isExpanded && (
+                <div className="ml-3 pl-3 border-l border-border/50 space-y-0.5 mt-0.5 mb-1">
+                  {group.children.map(item => {
+                    const ItemIcon = item.icon;
+                    const isActive = activeTab === item.id;
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => setActiveTab(item.id)}
+                        className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-sm transition-colors ${
+                          isActive
+                            ? 'bg-background font-medium text-foreground shadow-sm'
+                            : 'text-muted-foreground hover:bg-background/50'
+                        }`}
+                      >
+                        <ItemIcon className="h-3.5 w-3.5" />
+                        {t(item.labelKey)}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
 
-      {loading ? (
-        <div className="flex items-center justify-center py-20">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-        </div>
-      ) : (
-        <Card>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[300px]">{t('admin.email')}</TableHead>
-                <TableHead>{t('admin.name')}</TableHead>
-                <TableHead>{t('admin.role')}</TableHead>
-                <TableHead>{t('admin.status')}</TableHead>
-                <TableHead>{t('admin.last_login')}</TableHead>
-                <TableHead className="w-[60px]"></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {users.map(user => (
-                <TableRow key={user.id}>
-                  <TableCell>
-                    <span className="text-sm font-medium">{user.email}</span>
-                  </TableCell>
-                  <TableCell>
-                    <span className="text-sm text-muted-foreground">{user.display_name || '—'}</span>
-                  </TableCell>
-                  <TableCell>
-                    <Select value={user.role} onValueChange={(val) => handleRoleChange(user.id, val)}>
-                      <SelectTrigger className="w-[130px] h-8">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="admin">
-                          <span className="flex items-center gap-1.5"><Shield className="h-3 w-3" /> Admin</span>
-                        </SelectItem>
-                        <SelectItem value="contributor">Contributor</SelectItem>
-                        <SelectItem value="viewer">Viewer</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={user.invite_status === 'accepted' ? 'default' : 'secondary'}>
-                      {user.invite_status === 'accepted' ? t('admin.accepted') : t('admin.pending')}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <span className="text-xs text-muted-foreground">{formatDate(user.last_login)}</span>
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-destructive hover:text-destructive"
-                      onClick={() => handleRevoke(user)}
-                      title="Revoke access"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-              {users.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
-                    No users yet. Invite the first family member.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </Card>
-      )}
-
-      {/* Invite Dialog */}
-      <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
-        <DialogContent>
-          <form onSubmit={handleInvite}>
-            <DialogHeader>
-              <DialogTitle>{t('admin.invite_title')}</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label>{t('admin.email')}</Label>
-                <Input
-                  type="email"
-                  placeholder="family.member@gmail.com"
-                  value={inviteEmail}
-                  onChange={(e) => setInviteEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>{t('admin.role')}</Label>
-                <Select value={inviteRole} onValueChange={setInviteRole}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="admin">Admin</SelectItem>
-                    <SelectItem value="contributor">Contributor</SelectItem>
-                    <SelectItem value="viewer">Viewer</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <DialogFooter>
-              <Button type="submit" disabled={inviteLoading} className="gap-1.5">
-                {inviteLoading && <Loader2 className="h-4 w-4 animate-spin" />}
-                {t('admin.send_invite')}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto">
+        {activeTab === 'access' && <UserManagement />}
+        {activeTab === 'activity' && <ActivityLog />}
+        {activeTab === 'requests' && <RequestQueue />}
+        {activeTab === 'drafts' && <DraftManagement />}
+        {activeTab === 'quarantine' && <QuarantineManagement />}
+        {activeTab === 'eoi' && <ContributionRequests />}
+        {activeTab === 'platform_settings' && <PlatformSettings />}
+      </div>
     </div>
   );
 }

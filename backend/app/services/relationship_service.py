@@ -19,6 +19,8 @@ def create_relationship(db: Session, data: RelationshipCreate, current_user: Use
         person_b_id=data.person_b_id,
         type=data.type,
         marriage_status=marriage_status,
+        marriage_date=data.marriage_date,
+        marriage_location=data.marriage_location,
         child_birth_order=data.child_birth_order,
         marriage_id=data.marriage_id,
         status=ApprovalStatus.approved,
@@ -159,20 +161,34 @@ def get_relationship_by_id(db: Session, rel_id: int) -> Relationship | None:
     return db.query(Relationship).filter(Relationship.id == rel_id).first()
 
 
-def get_all_relationships(db: Session) -> list[Relationship]:
-    return db.query(Relationship).all()
+def get_all_relationships(db: Session, include_pending: bool = True) -> list[Relationship]:
+    query = db.query(Relationship)
+    if not include_pending:
+        query = query.filter(Relationship.status == ApprovalStatus.approved)
+    return query.all()
 
 
-def serialize_relationship(rel: Relationship) -> dict:
-    return {
+def serialize_relationship(rel: Relationship, db: Session = None) -> dict:
+    from app.services.bs_ad_converter import date_to_display
+    result = {
         "id": rel.id,
         "person_a_id": rel.person_a_id,
         "person_b_id": rel.person_b_id,
         "type": rel.type.value,
         "marriage_status": rel.marriage_status.value if rel.marriage_status else None,
+        "marriage_date": date_to_display(rel.marriage_date),
+        "marriage_location": rel.marriage_location,
         "child_birth_order": rel.child_birth_order,
         "marriage_id": rel.marriage_id,
         "status": rel.status.value,
         "created_at": rel.created_at.isoformat() if rel.created_at else None,
         "updated_at": rel.updated_at.isoformat() if rel.updated_at else None,
     }
+    # Resolve person names when db is available
+    if db:
+        for key in ("person_a_id", "person_b_id"):
+            pid = getattr(rel, key)
+            person = db.query(Person).filter(Person.id == pid).first()
+            if person:
+                result[f"{key}_name"] = " ".join(filter(None, [person.first_name, person.middle_name, person.last_name]))
+    return result

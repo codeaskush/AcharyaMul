@@ -191,6 +191,7 @@ export function buildHorizontalLayout(persons, relationships, expandedFamilies =
         x2: sp.x + NODE_W / 2,
         y2: sp.y,
         marriage_status: s.marriage.marriage_status,
+        status: s.marriage.status,
       });
     });
 

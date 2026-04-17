@@ -8,6 +8,7 @@ from app.database import get_db
 from app.dependencies import get_current_user
 from app.models.user import User
 from app.models.enums import Role, InviteStatus
+from app.services.admin_log_service import log_action
 
 router = APIRouter()
 
@@ -73,6 +74,7 @@ def invite_user(
         invited_by_id=current_user.id,
     )
     db.add(user)
+    log_action(db, current_user, action="user_invited", target_type="user", details={"email": email, "role": data.role.value})
     db.commit()
     db.refresh(user)
 
@@ -98,7 +100,9 @@ def update_user_role(
     if user.id == current_user.id and data.role != Role.admin:
         raise HTTPException(status_code=400, detail="Cannot demote yourself")
 
+    old_role = user.role.value
     user.role = data.role
+    log_action(db, current_user, action="role_changed", target_type="user", target_id=user_id, details={"old_role": old_role, "new_role": data.role.value, "email": user.email})
     db.commit()
     db.refresh(user)
 
@@ -122,6 +126,7 @@ def revoke_user(
     if user.id == current_user.id:
         raise HTTPException(status_code=400, detail="Cannot revoke your own access")
 
+    log_action(db, current_user, action="user_revoked", target_type="user", target_id=user_id, details={"email": user.email})
     db.delete(user)
     db.commit()
 

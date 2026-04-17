@@ -2,10 +2,14 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { personApi } from '@/api/client';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import FieldCorrectionForm from '@/features/contributor/FieldCorrectionForm';
 import { Avatar } from './PersonListPage';
 import VisibilityToggles from './VisibilityToggles';
 import { EyeOff, CalendarDays, X, Loader2 } from 'lucide-react';
@@ -117,6 +121,10 @@ export default function PersonDetailWide({ person, onClose, onEdit, onContribute
 
   const [lifeEvents, setLifeEvents] = useState([]);
   const [eventsLoading, setEventsLoading] = useState(false);
+  const [correctionOpen, setCorrectionOpen] = useState(false);
+  const [quarantineOpen, setQuarantineOpen] = useState(false);
+  const [quarantineReason, setQuarantineReason] = useState('');
+  const [quarantineLoading, setQuarantineLoading] = useState(false);
 
   useEffect(() => {
     if (!person?.id) return;
@@ -193,9 +201,77 @@ export default function PersonDetailWide({ person, onClose, onEdit, onContribute
               </>
             )}
 
-            <div className="flex gap-3 mt-6">
-              {isAdmin && <Button className="flex-1" onClick={() => onEdit?.(person)}>{t('actions.edit')}</Button>}
-              {isContributor && <Button variant="secondary" className="flex-1" onClick={() => onContribute?.(person)}>{t('actions.contribute')}</Button>}
+            <div className="flex flex-col gap-2 mt-6">
+              <div className="flex gap-3">
+                {isAdmin && <Button className="flex-1" onClick={() => onEdit?.(person)}>{t('actions.edit')}</Button>}
+                {isContributor && <Button variant="secondary" className="flex-1" onClick={() => setCorrectionOpen(true)}>{t('actions.contribute')}</Button>}
+              </div>
+              {isAdmin && person.status === 'approved' && !quarantineOpen && (
+                <Button
+                  variant="outline"
+                  className="w-full text-amber-600 border-amber-300 hover:bg-amber-50"
+                  onClick={() => setQuarantineOpen(true)}
+                >
+                  Quarantine
+                </Button>
+              )}
+              {isAdmin && person.status === 'approved' && quarantineOpen && (
+                <div className="border border-amber-300 bg-amber-50/50 rounded-lg p-3 space-y-2.5">
+                  <p className="text-xs font-semibold text-amber-700">Quarantine this person?</p>
+                  <p className="text-[10px] text-amber-600">This will set the person to pending status. They will appear faded in the chart until restored.</p>
+                  <div className="space-y-1">
+                    <Label className="text-xs text-amber-700">Reason *</Label>
+                    <Textarea
+                      className="min-h-16 text-xs border-amber-300 focus:border-amber-400"
+                      placeholder="Why is this person being quarantined?"
+                      value={quarantineReason}
+                      onChange={(e) => setQuarantineReason(e.target.value)}
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => { setQuarantineOpen(false); setQuarantineReason(''); }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      size="sm"
+                      className="flex-1 bg-amber-600 hover:bg-amber-700"
+                      disabled={!quarantineReason.trim() || quarantineLoading}
+                      onClick={async () => {
+                        setQuarantineLoading(true);
+                        try {
+                          await personApi.quarantine(person.id, { reason: quarantineReason.trim() });
+                          toast.success('Person quarantined');
+                          onClose();
+                        } catch (err) { toast.error(err.detail || 'Failed'); }
+                        finally { setQuarantineLoading(false); }
+                      }}
+                    >
+                      {quarantineLoading && <Loader2 className="mr-1.5 h-3 w-3 animate-spin" />}
+                      Confirm Quarantine
+                    </Button>
+                  </div>
+                </div>
+              )}
+              {isAdmin && person.status === 'quarantined' && (
+                <Button
+                  variant="outline"
+                  className="w-full text-green-600 border-green-300 hover:bg-green-50"
+                  onClick={async () => {
+                    try {
+                      await personApi.restore(person.id);
+                      toast.success('Person restored');
+                      onClose();
+                    } catch (err) { toast.error(err.detail || 'Failed'); }
+                  }}
+                >
+                  Restore
+                </Button>
+              )}
             </div>
           </div>
 
@@ -242,6 +318,14 @@ export default function PersonDetailWide({ person, onClose, onEdit, onContribute
           </div>
         </div>
       </DialogContent>
+
+      {correctionOpen && (
+        <FieldCorrectionForm
+          person={person}
+          open={correctionOpen}
+          onClose={() => setCorrectionOpen(false)}
+        />
+      )}
     </Dialog>
   );
 }

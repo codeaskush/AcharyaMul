@@ -157,6 +157,7 @@ export function buildLayout(persons, relationships, callbacks = {}) {
         data: {
           person: personMap[pid],
           isPending: personMap[pid].status === 'pending',
+          canEdit: callbacks.canEdit,
           onViewDetails: callbacks.onViewDetails,
           onAddSpouse: callbacks.onAddSpouse,
           onAddChild: callbacks.onAddChild,
@@ -216,6 +217,7 @@ export function buildLayout(persons, relationships, callbacks = {}) {
       x2: rightX,
       y2: p2.y + NODE_H / 2,
       marriage_status: m.marriage_status,
+      status: m.status,
     });
 
     marriageMidpoints[m.id] = {
@@ -243,6 +245,8 @@ export function buildLayout(persons, relationships, callbacks = {}) {
 
     connectors.push({
       type: 'parent-child',
+      relationship_id: pc.id,
+      status: pc.status,
       parentX: dropX,
       parentY: dropY,
       childX: childPos.x + NODE_W / 2,

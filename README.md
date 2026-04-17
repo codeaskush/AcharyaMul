@@ -1,78 +1,87 @@
-# rootslegx
+# आचार्यमूल (Acharyamul)
 
-Collaborative family tree web application for the Acharya family of Tanahun, Nepal. A digital vanshavali tracing lineage from Shree Krishna Acharya through Bhanubhakta Acharya (1814-1868 AD) to the current generation.
+Collaborative family tree web application for the Acharya family of Tanahun, Nepal.
 
 ## Tech Stack
 
-- **Frontend:** React + Vite (JavaScript)
-- **Backend:** FastAPI (Python 3.11+)
-- **Database:** PostgreSQL 16+
-- **Chart:** React Flow
-- **Deployment:** Docker Compose
+- **Frontend:** React 19 + Vite + Tailwind CSS + shadcn/ui
+- **Backend:** FastAPI + SQLAlchemy 2.0 (Python 3.11+)
+- **Database:** PostgreSQL 16+ (SQLite for local dev)
+- **Charts:** React Flow (vertical) + D3.js (horizontal)
+- **Auth:** Google OAuth 2.0 + JWT (httpOnly cookies)
+- **Deployment:** Docker Compose + Nginx
 
-## Quick Start
-
-### Prerequisites
-
-- Docker and Docker Compose installed
-- Google Cloud project with OAuth 2.0 credentials
-
-### Setup
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/rootslegx.git
-   cd rootslegx
-   ```
-
-2. Create environment file:
-   ```bash
-   cp .env.example .env
-   # Edit .env with your values (Google OAuth credentials, database password, JWT secret)
-   ```
-
-3. Start the application:
-   ```bash
-   docker compose up -d
-   ```
-
-4. Access the app at `http://localhost`
-
-### Development
-
-For local development with hot reload:
+## Quick Start (Local Dev)
 
 ```bash
-docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+# 1. Clone
+git clone https://github.com/your-username/rootslegx.git acharyamul
+cd acharyamul
+
+# 2. Backend
+cd backend
+python -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env  # Edit with your Google OAuth creds
+python seed.py        # Load mock family data
+
+# 3. Frontend
+cd ../frontend
+npm install
+
+# 4. Run both
+cd ..
+./dev.sh
+# → Backend: http://localhost:8000
+# → Frontend: http://localhost:5173
 ```
 
-- Frontend: http://localhost:5173
-- API: http://localhost:8000
-- API Docs: http://localhost:8000/api/docs
+Login with **"Login as Admin (Dev)"** using `admin` / `admin123`.
 
 ## Features
 
-- Interactive family chart with pan/zoom and auto-collapse
-- Person management with Roman + Devanagari names, AD/BS dates
-- Relationship calculator with Nepali kinship terms
-- Contributor workflow with pending states and optimistic UI
-- Admin moderation with revision history and rollback
-- Bilingual UI (English/Nepali)
-- Gmail SSO authentication
-- Automated daily backups
+- **Home Portal** — News, events countdown, history, literature, gallery
+- **Family Chart** — Vertical (React Flow) and horizontal (D3) with view switcher
+- **Person Management** — 4-column form with employment, life events, live timeline
+- **Relationships** — Marriage (date, location, status) + parent-child with parent assignment
+- **Analytics** — Gender, age, location, occupation, generation charts
+- **Members List** — Paginated, searchable, dual-script (Roman + Devanagari)
+- **Relationship Calculator** — Name-to-relation + step-by-step path builder with Nepali kinship terms
+- **Contributor Workflow** — Suggest corrections, add pending persons/relationships, rate limiting
+- **Admin Panel** — User management, contribution review, drafts, quarantine, expression of interest, activity log, platform settings
+- **Auth** — Google SSO + dev admin login, role-based access (admin/contributor/viewer)
+- **Bilingual UI** — English/Nepali toggle
+- **Data Safety** — Automated daily backups, seed data management
+
+## Deployment
+
+See [DEPLOY.md](DEPLOY.md) for UAT/production deployment instructions.
+
+```bash
+# Docker deploy
+cp .env.example .env  # Configure
+docker compose up -d --build
+```
 
 ## Project Structure
 
 ```
-rootslegx/
-├── frontend/          # React + Vite SPA
-├── backend/           # FastAPI + SQLAlchemy
-├── nginx/             # Reverse proxy config
-├── scripts/           # Backup and restore scripts
-├── db/                # Database initialization
+acharyamul/
+├── frontend/           # React + Vite SPA
+│   └── src/features/   # chart, person, home, admin, analytics, auth, contributor
+├── backend/            # FastAPI + SQLAlchemy
+│   ├── app/api/        # REST endpoints
+│   ├── app/models/     # SQLAlchemy ORM models
+│   ├── app/services/   # Business logic
+│   ├── seed.py         # Database seeder
+│   └── seed_data.json  # Mock family data
+├── nginx/              # Reverse proxy config
+├── scripts/            # Backup/restore scripts
+├── dev.sh              # Local dev starter
+├── DEPLOY.md           # Deployment guide
 └── docker-compose.yml
 ```
 
 ## License
 
-Open source. Built by the Acharya family, for the Acharya family.
+Built by the Acharya family, for the Acharya family.

@@ -1,63 +1,1134 @@
 {
   "persons": [
-    { "id": 1, "generation": 1, "first_name": "Bishwo", "middle_name": "Raj", "last_name": "Acharya", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "male", "is_alive": false, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 2, "generation": 1, "first_name": "Shubhadra", "middle_name": "Devi", "last_name": "Acharya", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "female", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 3, "generation": 2, "first_name": "Bhawani", "middle_name": null, "last_name": "Bhattrai", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "female", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 4, "generation": 2, "first_name": "Kashi", "middle_name": "Raj", "last_name": "Acharya", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "male", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 5, "generation": 2, "first_name": "Geeta", "middle_name": null, "last_name": "Devkota", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "female", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 6, "generation": 2, "first_name": "Bidhan", "middle_name": null, "last_name": "Acharya", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "male", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 7, "generation": 2, "first_name": "Uttam", "middle_name": null, "last_name": "Acharya", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "male", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 8, "generation": 2, "first_name": "Nirmala", "middle_name": null, "last_name": "Ghimire", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "female", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 9, "generation": 3, "first_name": "Shusil", "middle_name": null, "last_name": "Bhattrai", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "male", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 10, "generation": 3, "first_name": "Kalpana", "middle_name": null, "last_name": "Rupakheti", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "female", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 11, "generation": 3, "first_name": "Ashok", "middle_name": null, "last_name": "Bhattrai", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "male", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 12, "generation": 3, "first_name": "Saurav", "middle_name": null, "last_name": "Acharya", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "male", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 13, "generation": 3, "first_name": "Gaurav", "middle_name": null, "last_name": "Acharya", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "male", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 14, "generation": 3, "first_name": "Ankinchan", "middle_name": null, "last_name": "Devkota", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "male", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 15, "generation": 3, "first_name": "Abodha", "middle_name": null, "last_name": "Devkota", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "male", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 16, "generation": 3, "first_name": "Anwesh", "middle_name": null, "last_name": "Devkota", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "male", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 17, "generation": 3, "first_name": "Anjusha", "middle_name": null, "last_name": "Devkota", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "female", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 18, "generation": 3, "first_name": "Aashram", "middle_name": null, "last_name": "Acharya", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "male", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 19, "generation": 3, "first_name": "Kushagra", "middle_name": null, "last_name": "Acharya", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "male", "is_alive": true, "photo_url": null, "status": "approved", "dob": { "ad": "1996-12-12", "bs": null }, "dod": null, "place_of_birth": "Lalitpur", "current_address": "Sippy Downs, Australia", "occupation": "Student", "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 20, "generation": 3, "first_name": "Samhita", "middle_name": null, "last_name": "Acharya", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "male", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 21, "generation": 3, "first_name": "Kushma", "middle_name": null, "last_name": "Ghimire", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "female", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 22, "generation": 3, "first_name": "Sushma", "middle_name": null, "last_name": "Ghimire", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "female", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 23, "generation": 3, "first_name": "Amod", "middle_name": null, "last_name": "Ghimire", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "male", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 24, "generation": 4, "first_name": "Saurya", "middle_name": null, "last_name": "Bhattrai", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "female", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 25, "generation": 4, "first_name": "Saharsha", "middle_name": null, "last_name": "Bhattrai", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "male", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 26, "generation": 4, "first_name": "Kakshya", "middle_name": null, "last_name": "Rupakheti", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "female", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 27, "generation": 4, "first_name": "Kundan", "middle_name": null, "last_name": "Rupakheti", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "male", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 28, "generation": 4, "first_name": "Beatles", "middle_name": null, "last_name": "Bhattrai", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "male", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } },
-    { "id": 29, "generation": 4, "first_name": "Chandan", "middle_name": null, "last_name": "Bhattrai", "first_name_devanagari": null, "middle_name_devanagari": null, "last_name_devanagari": null, "gender": "male", "is_alive": true, "photo_url": null, "status": "approved", "dob": null, "dod": null, "place_of_birth": null, "current_address": null, "occupation": null, "visibility_settings": { "dob": true, "address": true, "phone": true, "email": true } }
+    {
+      "id": 1,
+      "generation": 1,
+      "first_name": "Bishwo",
+      "middle_name": "Raj",
+      "last_name": "Acharya",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "1945-03-15",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Tanahun",
+      "current_address": null,
+      "occupation": "Farmer",
+      "gender": "male",
+      "is_alive": false,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 2,
+      "generation": 1,
+      "first_name": "Shubhadra",
+      "middle_name": "Devi",
+      "last_name": "Acharya",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "1950-08-20",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Tanahun",
+      "current_address": "Tanahun, Nepal",
+      "occupation": "Homemaker",
+      "gender": "female",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 3,
+      "generation": 2,
+      "first_name": "Bhawani",
+      "middle_name": null,
+      "last_name": "Bhattrai",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "1970-01-10",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Tanahun",
+      "current_address": "Tanahun, Nepal",
+      "occupation": "Teacher",
+      "gender": "female",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 4,
+      "generation": 2,
+      "first_name": "Kashi",
+      "middle_name": "Raj",
+      "last_name": "Acharya",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "1968-05-22",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Tanahun",
+      "current_address": "Kathmandu, Nepal",
+      "occupation": "Government Officer",
+      "gender": "male",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 5,
+      "generation": 2,
+      "first_name": "Geeta",
+      "middle_name": null,
+      "last_name": "Devkota",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "1972-11-05",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Tanahun",
+      "current_address": "Chitwan, Nepal",
+      "occupation": "Homemaker",
+      "gender": "female",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 6,
+      "generation": 2,
+      "first_name": "Bidhan",
+      "middle_name": null,
+      "last_name": "Acharya",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "1974-07-18",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Tanahun",
+      "current_address": "Tanahun, Nepal",
+      "occupation": "Businessman",
+      "gender": "male",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 7,
+      "generation": 2,
+      "first_name": "Uttam",
+      "middle_name": null,
+      "last_name": "Acharya",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "1976-02-28",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Tanahun",
+      "current_address": "Kathmandu, Nepal",
+      "occupation": "Engineer",
+      "gender": "male",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 8,
+      "generation": 2,
+      "first_name": "Nirmala",
+      "middle_name": null,
+      "last_name": "Ghimire",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "1978-09-12",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Gorkha",
+      "current_address": "Pokhara, Nepal",
+      "occupation": "Nurse",
+      "gender": "female",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 9,
+      "generation": 3,
+      "first_name": "Shusil",
+      "middle_name": null,
+      "last_name": "Bhattrai",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "1990-04-05",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Tanahun",
+      "current_address": "Dubai, UAE",
+      "occupation": "Construction Manager",
+      "gender": "male",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 10,
+      "generation": 3,
+      "first_name": "Kalpana",
+      "middle_name": null,
+      "last_name": "Rupakheti",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "1992-06-14",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Kathmandu",
+      "current_address": "Kathmandu, Nepal",
+      "occupation": "Accountant",
+      "gender": "female",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 11,
+      "generation": 3,
+      "first_name": "Ashok",
+      "middle_name": null,
+      "last_name": "Bhattrai",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "1993-12-01",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Tanahun",
+      "current_address": "Doha, Qatar",
+      "occupation": "Civil Engineer",
+      "gender": "male",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 12,
+      "generation": 3,
+      "first_name": "Saurav",
+      "middle_name": null,
+      "last_name": "Acharya",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "1995-03-20",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Kathmandu",
+      "current_address": "Melbourne, Australia",
+      "occupation": "Software Developer",
+      "gender": "male",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 13,
+      "generation": 3,
+      "first_name": "Gaurav",
+      "middle_name": null,
+      "last_name": "Acharya",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "1997-08-10",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Kathmandu",
+      "current_address": "Kathmandu, Nepal",
+      "occupation": "Banker",
+      "gender": "male",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 14,
+      "generation": 3,
+      "first_name": "Ankinchan",
+      "middle_name": null,
+      "last_name": "Devkota",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "1998-01-25",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Chitwan",
+      "current_address": "London, UK",
+      "occupation": "Data Analyst",
+      "gender": "male",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 15,
+      "generation": 3,
+      "first_name": "Abodha",
+      "middle_name": null,
+      "last_name": "Devkota",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "1999-05-30",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Chitwan",
+      "current_address": "Chitwan, Nepal",
+      "occupation": "Student",
+      "gender": "male",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 16,
+      "generation": 3,
+      "first_name": "Anwesh",
+      "middle_name": null,
+      "last_name": "Devkota",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "2001-10-08",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Chitwan",
+      "current_address": "Tanahun, Nepal",
+      "occupation": "Teacher",
+      "gender": "male",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 17,
+      "generation": 3,
+      "first_name": "Anjusha",
+      "middle_name": null,
+      "last_name": "Devkota",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "2003-03-17",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Chitwan",
+      "current_address": "Kathmandu, Nepal",
+      "occupation": "Student",
+      "gender": "female",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 18,
+      "generation": 3,
+      "first_name": "Aashram",
+      "middle_name": null,
+      "last_name": "Acharya",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "1998-07-22",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Tanahun",
+      "current_address": "Tanahun, Nepal",
+      "occupation": "Farmer",
+      "gender": "male",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 19,
+      "generation": 3,
+      "first_name": "Kushagra",
+      "middle_name": null,
+      "last_name": "Acharya",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "1996-12-12",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Lalitpur",
+      "current_address": "Sippy Downs, Australia",
+      "occupation": "Student",
+      "gender": "male",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": false,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 20,
+      "generation": 3,
+      "first_name": "Samhita",
+      "middle_name": null,
+      "last_name": "Acharya",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "2000-04-02",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Kathmandu",
+      "current_address": "Tokyo, Japan",
+      "occupation": "Chef",
+      "gender": "male",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 21,
+      "generation": 3,
+      "first_name": "Kushma",
+      "middle_name": null,
+      "last_name": "Ghimire",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "1995-11-18",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Pokhara",
+      "current_address": "Pokhara, Nepal",
+      "occupation": "Pharmacist",
+      "gender": "female",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 22,
+      "generation": 3,
+      "first_name": "Sushma",
+      "middle_name": null,
+      "last_name": "Ghimire",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "1998-02-05",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Pokhara",
+      "current_address": "New York, USA",
+      "occupation": "Graphic Designer",
+      "gender": "female",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 23,
+      "generation": 3,
+      "first_name": "Amod",
+      "middle_name": null,
+      "last_name": "Ghimire",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "2001-06-28",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Pokhara",
+      "current_address": "Tanahun, Nepal",
+      "occupation": "Electrician",
+      "gender": "male",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 24,
+      "generation": 4,
+      "first_name": "Saurya",
+      "middle_name": null,
+      "last_name": "Bhattrai",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "2018-09-14",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Kathmandu",
+      "current_address": "Dubai, UAE",
+      "occupation": null,
+      "gender": "female",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 25,
+      "generation": 4,
+      "first_name": "Saharsha",
+      "middle_name": null,
+      "last_name": "Bhattrai",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "2020-03-08",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Dubai",
+      "current_address": "Dubai, UAE",
+      "occupation": null,
+      "gender": "male",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 26,
+      "generation": 4,
+      "first_name": "Kakshya",
+      "middle_name": null,
+      "last_name": "Rupakheti",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "2019-07-20",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Kathmandu",
+      "current_address": "Kathmandu, Nepal",
+      "occupation": null,
+      "gender": "female",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 27,
+      "generation": 4,
+      "first_name": "Kundan",
+      "middle_name": null,
+      "last_name": "Rupakheti",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "2021-01-15",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Kathmandu",
+      "current_address": "Kathmandu, Nepal",
+      "occupation": null,
+      "gender": "male",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 28,
+      "generation": 4,
+      "first_name": "Beatles",
+      "middle_name": null,
+      "last_name": "Bhattrai",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "2017-05-12",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Doha",
+      "current_address": "Doha, Qatar",
+      "occupation": null,
+      "gender": "male",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 29,
+      "generation": 4,
+      "first_name": "Chandan",
+      "middle_name": null,
+      "last_name": "Bhattrai",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "2019-11-03",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": "Doha",
+      "current_address": "Tanahun, Nepal",
+      "occupation": null,
+      "gender": "male",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 30,
+      "generation": 1,
+      "first_name": "Chhaya",
+      "middle_name": null,
+      "last_name": "Acharya",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": {
+        "ad": "2026-04-15",
+        "bs": null
+      },
+      "dod": null,
+      "place_of_birth": null,
+      "current_address": null,
+      "occupation": null,
+      "gender": "female",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 31,
+      "generation": 1,
+      "first_name": "Person",
+      "middle_name": null,
+      "last_name": "A",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": null,
+      "dod": null,
+      "place_of_birth": null,
+      "current_address": null,
+      "occupation": null,
+      "gender": "male",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    },
+    {
+      "id": 32,
+      "generation": 1,
+      "first_name": "Person",
+      "middle_name": null,
+      "last_name": "B",
+      "first_name_devanagari": null,
+      "middle_name_devanagari": null,
+      "last_name_devanagari": null,
+      "dob": null,
+      "dod": null,
+      "place_of_birth": null,
+      "current_address": null,
+      "occupation": null,
+      "gender": "male",
+      "is_alive": true,
+      "photo_url": null,
+      "visibility_settings": {
+        "dob": true,
+        "address": true,
+        "phone": true,
+        "email": true
+      }
+    }
   ],
   "relationships": [
-    { "id": 1, "type": "marriage", "person_a_id": 1, "person_b_id": 2, "marriage_status": "active", "marriage_id": null, "status": "approved" },
-    { "id": 2, "type": "parent_child", "person_a_id": 1, "person_b_id": 3, "marriage_status": null, "marriage_id": 1, "status": "approved" },
-    { "id": 3, "type": "parent_child", "person_a_id": 1, "person_b_id": 4, "marriage_status": null, "marriage_id": 1, "status": "approved" },
-    { "id": 4, "type": "parent_child", "person_a_id": 1, "person_b_id": 5, "marriage_status": null, "marriage_id": 1, "status": "approved" },
-    { "id": 5, "type": "parent_child", "person_a_id": 1, "person_b_id": 6, "marriage_status": null, "marriage_id": 1, "status": "approved" },
-    { "id": 6, "type": "parent_child", "person_a_id": 1, "person_b_id": 7, "marriage_status": null, "marriage_id": 1, "status": "approved" },
-    { "id": 7, "type": "parent_child", "person_a_id": 1, "person_b_id": 8, "marriage_status": null, "marriage_id": 1, "status": "approved" },
-    { "id": 8, "type": "parent_child", "person_a_id": 3, "person_b_id": 9, "marriage_status": null, "marriage_id": null, "status": "approved" },
-    { "id": 9, "type": "parent_child", "person_a_id": 3, "person_b_id": 11, "marriage_status": null, "marriage_id": null, "status": "approved" },
-    { "id": 10, "type": "parent_child", "person_a_id": 3, "person_b_id": 10, "marriage_status": null, "marriage_id": null, "status": "approved" },
-    { "id": 11, "type": "parent_child", "person_a_id": 4, "person_b_id": 12, "marriage_status": null, "marriage_id": null, "status": "approved" },
-    { "id": 12, "type": "parent_child", "person_a_id": 4, "person_b_id": 13, "marriage_status": null, "marriage_id": null, "status": "approved" },
-    { "id": 13, "type": "parent_child", "person_a_id": 5, "person_b_id": 14, "marriage_status": null, "marriage_id": null, "status": "approved" },
-    { "id": 14, "type": "parent_child", "person_a_id": 5, "person_b_id": 15, "marriage_status": null, "marriage_id": null, "status": "approved" },
-    { "id": 15, "type": "parent_child", "person_a_id": 5, "person_b_id": 17, "marriage_status": null, "marriage_id": null, "status": "approved" },
-    { "id": 16, "type": "parent_child", "person_a_id": 5, "person_b_id": 16, "marriage_status": null, "marriage_id": null, "status": "approved" },
-    { "id": 17, "type": "parent_child", "person_a_id": 6, "person_b_id": 18, "marriage_status": null, "marriage_id": null, "status": "approved" },
-    { "id": 18, "type": "parent_child", "person_a_id": 7, "person_b_id": 19, "marriage_status": null, "marriage_id": null, "status": "approved" },
-    { "id": 19, "type": "parent_child", "person_a_id": 7, "person_b_id": 20, "marriage_status": null, "marriage_id": null, "status": "approved" },
-    { "id": 20, "type": "parent_child", "person_a_id": 8, "person_b_id": 21, "marriage_status": null, "marriage_id": null, "status": "approved" },
-    { "id": 21, "type": "parent_child", "person_a_id": 8, "person_b_id": 22, "marriage_status": null, "marriage_id": null, "status": "approved" },
-    { "id": 22, "type": "parent_child", "person_a_id": 8, "person_b_id": 23, "marriage_status": null, "marriage_id": null, "status": "approved" },
-    { "id": 23, "type": "parent_child", "person_a_id": 9, "person_b_id": 24, "marriage_status": null, "marriage_id": null, "status": "approved" },
-    { "id": 24, "type": "parent_child", "person_a_id": 9, "person_b_id": 25, "marriage_status": null, "marriage_id": null, "status": "approved" },
-    { "id": 25, "type": "parent_child", "person_a_id": 11, "person_b_id": 28, "marriage_status": null, "marriage_id": null, "status": "approved" },
-    { "id": 26, "type": "parent_child", "person_a_id": 11, "person_b_id": 29, "marriage_status": null, "marriage_id": null, "status": "approved" },
-    { "id": 27, "type": "parent_child", "person_a_id": 10, "person_b_id": 26, "marriage_status": null, "marriage_id": null, "status": "approved" },
-    { "id": 28, "type": "parent_child", "person_a_id": 10, "person_b_id": 27, "marriage_status": null, "marriage_id": null, "status": "approved" }
+    {
+      "id": 1,
+      "type": "marriage",
+      "person_a_id": 1,
+      "person_b_id": 2,
+      "marriage_status": "active",
+      "marriage_id": null,
+      "status": "approved"
+    },
+    {
+      "id": 2,
+      "type": "parent_child",
+      "person_a_id": 1,
+      "person_b_id": 3,
+      "marriage_status": null,
+      "marriage_id": 1,
+      "status": "approved"
+    },
+    {
+      "id": 3,
+      "type": "parent_child",
+      "person_a_id": 1,
+      "person_b_id": 4,
+      "marriage_status": null,
+      "marriage_id": 1,
+      "status": "approved"
+    },
+    {
+      "id": 4,
+      "type": "parent_child",
+      "person_a_id": 1,
+      "person_b_id": 5,
+      "marriage_status": null,
+      "marriage_id": 1,
+      "status": "approved"
+    },
+    {
+      "id": 5,
+      "type": "parent_child",
+      "person_a_id": 1,
+      "person_b_id": 6,
+      "marriage_status": null,
+      "marriage_id": 1,
+      "status": "approved"
+    },
+    {
+      "id": 6,
+      "type": "parent_child",
+      "person_a_id": 1,
+      "person_b_id": 7,
+      "marriage_status": null,
+      "marriage_id": 1,
+      "status": "approved"
+    },
+    {
+      "id": 7,
+      "type": "parent_child",
+      "person_a_id": 1,
+      "person_b_id": 8,
+      "marriage_status": null,
+      "marriage_id": 1,
+      "status": "approved"
+    },
+    {
+      "id": 8,
+      "type": "parent_child",
+      "person_a_id": 3,
+      "person_b_id": 9,
+      "marriage_status": null,
+      "marriage_id": null,
+      "status": "approved"
+    },
+    {
+      "id": 9,
+      "type": "parent_child",
+      "person_a_id": 3,
+      "person_b_id": 11,
+      "marriage_status": null,
+      "marriage_id": null,
+      "status": "approved"
+    },
+    {
+      "id": 10,
+      "type": "parent_child",
+      "person_a_id": 3,
+      "person_b_id": 10,
+      "marriage_status": null,
+      "marriage_id": null,
+      "status": "approved"
+    },
+    {
+      "id": 11,
+      "type": "parent_child",
+      "person_a_id": 4,
+      "person_b_id": 12,
+      "marriage_status": null,
+      "marriage_id": null,
+      "status": "approved"
+    },
+    {
+      "id": 12,
+      "type": "parent_child",
+      "person_a_id": 4,
+      "person_b_id": 13,
+      "marriage_status": null,
+      "marriage_id": null,
+      "status": "approved"
+    },
+    {
+      "id": 13,
+      "type": "parent_child",
+      "person_a_id": 5,
+      "person_b_id": 14,
+      "marriage_status": null,
+      "marriage_id": null,
+      "status": "approved"
+    },
+    {
+      "id": 14,
+      "type": "parent_child",
+      "person_a_id": 5,
+      "person_b_id": 15,
+      "marriage_status": null,
+      "marriage_id": null,
+      "status": "approved"
+    },
+    {
+      "id": 15,
+      "type": "parent_child",
+      "person_a_id": 5,
+      "person_b_id": 17,
+      "marriage_status": null,
+      "marriage_id": null,
+      "status": "approved"
+    },
+    {
+      "id": 16,
+      "type": "parent_child",
+      "person_a_id": 5,
+      "person_b_id": 16,
+      "marriage_status": null,
+      "marriage_id": null,
+      "status": "approved"
+    },
+    {
+      "id": 17,
+      "type": "parent_child",
+      "person_a_id": 6,
+      "person_b_id": 18,
+      "marriage_status": null,
+      "marriage_id": 29,
+      "status": "approved"
+    },
+    {
+      "id": 18,
+      "type": "parent_child",
+      "person_a_id": 7,
+      "person_b_id": 19,
+      "marriage_status": null,
+      "marriage_id": null,
+      "status": "approved"
+    },
+    {
+      "id": 19,
+      "type": "parent_child",
+      "person_a_id": 7,
+      "person_b_id": 20,
+      "marriage_status": null,
+      "marriage_id": null,
+      "status": "approved"
+    },
+    {
+      "id": 20,
+      "type": "parent_child",
+      "person_a_id": 8,
+      "person_b_id": 21,
+      "marriage_status": null,
+      "marriage_id": null,
+      "status": "approved"
+    },
+    {
+      "id": 21,
+      "type": "parent_child",
+      "person_a_id": 8,
+      "person_b_id": 22,
+      "marriage_status": null,
+      "marriage_id": null,
+      "status": "approved"
+    },
+    {
+      "id": 22,
+      "type": "parent_child",
+      "person_a_id": 8,
+      "person_b_id": 23,
+      "marriage_status": null,
+      "marriage_id": null,
+      "status": "approved"
+    },
+    {
+      "id": 23,
+      "type": "parent_child",
+      "person_a_id": 9,
+      "person_b_id": 24,
+      "marriage_status": null,
+      "marriage_id": null,
+      "status": "approved"
+    },
+    {
+      "id": 24,
+      "type": "parent_child",
+      "person_a_id": 9,
+      "person_b_id": 25,
+      "marriage_status": null,
+      "marriage_id": null,
+      "status": "approved"
+    },
+    {
+      "id": 25,
+      "type": "parent_child",
+      "person_a_id": 11,
+      "person_b_id": 28,
+      "marriage_status": null,
+      "marriage_id": null,
+      "status": "approved"
+    },
+    {
+      "id": 26,
+      "type": "parent_child",
+      "person_a_id": 11,
+      "person_b_id": 29,
+      "marriage_status": null,
+      "marriage_id": null,
+      "status": "approved"
+    },
+    {
+      "id": 27,
+      "type": "parent_child",
+      "person_a_id": 10,
+      "person_b_id": 26,
+      "marriage_status": null,
+      "marriage_id": null,
+      "status": "approved"
+    },
+    {
+      "id": 28,
+      "type": "parent_child",
+      "person_a_id": 10,
+      "person_b_id": 27,
+      "marriage_status": null,
+      "marriage_id": null,
+      "status": "approved"
+    },
+    {
+      "id": 29,
+      "type": "marriage",
+      "person_a_id": 30,
+      "person_b_id": 6,
+      "marriage_status": "active",
+      "marriage_id": null,
+      "status": "approved"
+    },
+    {
+      "id": 30,
+      "type": "marriage",
+      "person_a_id": 31,
+      "person_b_id": 32,
+      "marriage_status": "active",
+      "marriage_id": null,
+      "status": "pending"
+    }
   ]
 }

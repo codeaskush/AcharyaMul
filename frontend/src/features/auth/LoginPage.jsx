@@ -1,15 +1,42 @@
-import { useSearchParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
+import { authApi } from '@/api/client';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { TreePine } from 'lucide-react';
+import { TreePine, Loader2, ChevronDown, ChevronRight } from 'lucide-react';
 
 export default function LoginPage() {
   const { t } = useTranslation();
-  const { login } = useAuth();
+  const { login, dispatch } = useAuth();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const error = searchParams.get('error');
+
+  const [devOpen, setDevOpen] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [devLoading, setDevLoading] = useState(false);
+  const [devError, setDevError] = useState(null);
+
+  const handleDevLogin = async (e) => {
+    e.preventDefault();
+    setDevLoading(true);
+    setDevError(null);
+    try {
+      const res = await authApi.devLogin(username, password);
+      dispatch({ type: 'SET_USER', payload: res.data });
+      navigate('/');
+    } catch (err) {
+      setDevError(err.detail || 'Invalid credentials');
+    } finally {
+      setDevLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-muted/30 px-4">
@@ -43,6 +70,37 @@ export default function LoginPage() {
           <p className="text-xs text-muted-foreground text-center">
             {t('auth.login_hint')}
           </p>
+
+          {/* Dev admin login */}
+          <Separator />
+
+          <button
+            className="w-full flex items-center justify-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors py-1"
+            onClick={() => setDevOpen(!devOpen)}
+          >
+            {devOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+            Login as Admin (Dev)
+          </button>
+
+          {devOpen && (
+            <form onSubmit={handleDevLogin} className="space-y-3 border border-border rounded-lg p-3 bg-muted/30">
+              {devError && (
+                <div className="bg-destructive/10 text-destructive px-3 py-2 rounded text-xs text-center">{devError}</div>
+              )}
+              <div className="space-y-1.5">
+                <Label className="text-xs">Username</Label>
+                <Input value={username} onChange={e => setUsername(e.target.value)} placeholder="admin" required />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Password</Label>
+                <Input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="********" required />
+              </div>
+              <Button type="submit" variant="outline" className="w-full" disabled={devLoading}>
+                {devLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Login as Dev Admin
+              </Button>
+            </form>
+          )}
         </CardContent>
       </Card>
     </div>

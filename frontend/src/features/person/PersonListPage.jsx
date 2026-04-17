@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { personApi } from '@/api/client';
+import { useAuth } from '@/contexts/AuthContext';
 import PersonDetailWide from './PersonDetailWide';
 import PersonFormWide from './PersonFormWide';
+import ContributeInterestForm from '@/features/contributor/ContributeInterestForm';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
@@ -33,6 +35,8 @@ export { Avatar };
 
 export default function PersonListPage() {
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'admin';
   const [persons, setPersons] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -43,6 +47,7 @@ export default function PersonListPage() {
   const [showForm, setShowForm] = useState(false);
   const [editPerson, setEditPerson] = useState(null);
   const [page, setPage] = useState(1);
+  const [interestOpen, setInterestOpen] = useState(false);
   const perPage = 15;
 
   const fetchPersons = async () => {
@@ -111,10 +116,16 @@ export default function PersonListPage() {
             {persons.length} family member{persons.length !== 1 ? 's' : ''} in the tree
           </p>
         </div>
-        <Button onClick={() => { setShowForm(true); setEditPerson(null); }}>
-          <Plus className="h-4 w-4 mr-2" />
-          {t('actions.add_person')}
-        </Button>
+        {(isAdmin || user?.role === 'contributor') ? (
+          <Button onClick={() => { setShowForm(true); setEditPerson(null); }}>
+            <Plus className="h-4 w-4 mr-2" />
+            {t('actions.add_person')}
+          </Button>
+        ) : user?.role === 'viewer' ? (
+          <Button variant="outline" className="gap-1.5 border-green-400 text-green-700 hover:bg-green-50" onClick={() => setInterestOpen(true)}>
+            Want to Contribute?
+          </Button>
+        ) : null}
       </div>
 
       {/* Search & Filters Bar */}
@@ -170,11 +181,15 @@ export default function PersonListPage() {
       ) : persons.length === 0 ? (
         <Card className="p-16 text-center">
           <p className="text-muted-foreground text-lg mb-2">No family members yet</p>
-          <p className="text-muted-foreground/60 text-sm mb-6">Add the first person to start building your family tree.</p>
-          <Button onClick={() => setShowForm(true)}>
-            <Plus className="h-4 w-4 mr-2" />
-            {t('actions.add_person')}
-          </Button>
+          <p className="text-muted-foreground/60 text-sm mb-6">
+            {(isAdmin || user?.role === 'contributor') ? 'Add the first person to start building your family tree.' : 'The family tree is being built. Check back soon.'}
+          </p>
+          {(isAdmin || user?.role === 'contributor') && (
+            <Button onClick={() => setShowForm(true)}>
+              <Plus className="h-4 w-4 mr-2" />
+              {t('actions.add_person')}
+            </Button>
+          )}
         </Card>
       ) : (
         <Card>
@@ -301,9 +316,11 @@ export default function PersonListPage() {
       {/* Add/Edit Dialog — 70% screen */}
       <Dialog open={showForm} onOpenChange={(open) => { if (!open) handleCancel(); }}>
         <DialogContent showCloseButton={false} className="!max-w-[95vw] !w-[95vw] !h-[90vh] !p-0 overflow-hidden flex flex-col">
-          <PersonFormWide person={editPerson} onSave={handleSave} onCancel={handleCancel} />
+          <PersonFormWide person={editPerson} onSave={handleSave} onCancel={handleCancel} contributorMode={!isAdmin} />
         </DialogContent>
       </Dialog>
+
+      <ContributeInterestForm open={interestOpen} onClose={() => setInterestOpen(false)} />
     </div>
   );
 }

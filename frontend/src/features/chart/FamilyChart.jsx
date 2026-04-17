@@ -14,9 +14,11 @@ import PersonNode from './PersonNode';
 import { ConnectorsSvg, GenerationLabels, GenerationDividers } from './TreeConnectors';
 import AddRelationshipDialog from './AddRelationshipDialog';
 import { buildLayout } from './layoutEngine';
+import { useAuth } from '@/contexts/AuthContext';
 import { graphApi, relationshipApi } from '@/api/client';
 import mockData from './mockData.json';
 import PersonDetailWide from '@/features/person/PersonDetailWide';
+import RelationshipDetailDialog from './RelationshipDetailDialog';
 import { Loader2 } from 'lucide-react';
 
 const USE_MOCK = false;
@@ -24,6 +26,8 @@ const USE_MOCK = false;
 const nodeTypes = { personNode: PersonNode };
 
 function FamilyChartInner() {
+  const { user } = useAuth();
+  const canEdit = user?.role === 'admin' || user?.role === 'contributor';
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [connectors, setConnectors] = useState([]);
@@ -31,13 +35,15 @@ function FamilyChartInner() {
   const [loading, setLoading] = useState(true);
   const [selectedPerson, setSelectedPerson] = useState(null);
   const [relDialog, setRelDialog] = useState({ open: false, person: null, type: null });
+  const [relDetailId, setRelDetailId] = useState(null);
 
   // Callbacks passed into node data so PersonNode context menu can trigger them
   const nodeCallbacks = useCallback(() => ({
+    canEdit,
     onViewDetails: (person) => setSelectedPerson(person),
     onAddSpouse: (person) => setRelDialog({ open: true, person, type: 'marriage' }),
     onAddChild: (person) => setRelDialog({ open: true, person, type: 'parent_child' }),
-  }), []);
+  }), [canEdit]);
 
   const loadGraph = useCallback(async () => {
     setLoading(true);
@@ -109,19 +115,10 @@ function FamilyChartInner() {
         preventScrolling
       >
         <GenerationDividers generationRows={generationRows} />
-        <ConnectorsSvg connectors={connectors} onMarriageClick={async (c) => {
-          const action = c.marriage_status === 'divorced' ? 'restore' : 'divorce';
-          const confirmed = confirm(`Mark this marriage as ${action === 'divorce' ? 'divorced' : 'active'}?`);
-          if (!confirmed) return;
-          try {
-            await relationshipApi.update(c.marriage_id, {
-              marriage_status: action === 'divorce' ? 'divorced' : 'active',
-              comment: action === 'divorce' ? 'Marked as divorced' : 'Restored marriage',
-            });
-            loadGraph();
-          } catch (err) {
-            alert(err.detail || 'Failed to update marriage status');
-          }
+        <ConnectorsSvg connectors={connectors} onMarriageClick={(c) => {
+          setRelDetailId(c.marriage_id);
+        }} onParentChildClick={(c) => {
+          setRelDetailId(c.relationship_id);
         }} />
         <GenerationLabels generationRows={generationRows} />
         <Background color="#e5e7eb" gap={20} size={1} />
@@ -148,6 +145,13 @@ function FamilyChartInner() {
         person={relDialog.person}
         type={relDialog.type}
         onSuccess={loadGraph}
+      />
+
+      <RelationshipDetailDialog
+        relationshipId={relDetailId}
+        open={!!relDetailId}
+        onClose={() => setRelDetailId(null)}
+        onUpdated={loadGraph}
       />
     </div>
   );

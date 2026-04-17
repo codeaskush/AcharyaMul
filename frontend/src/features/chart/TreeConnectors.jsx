@@ -6,7 +6,7 @@ import { useStore } from '@xyflow/react';
  *
  * Generation labels are rendered separately as a fixed HTML overlay.
  */
-export function ConnectorsSvg({ connectors, onMarriageClick }) {
+export function ConnectorsSvg({ connectors, onMarriageClick, onParentChildClick }) {
   const transform = useStore((s) => s.transform);
   const [tx, ty, scale] = transform;
 
@@ -26,23 +26,30 @@ export function ConnectorsSvg({ connectors, onMarriageClick }) {
       }}
     >
       <g transform={`translate(${tx}, ${ty}) scale(${scale})`} style={{ pointerEvents: 'none' }}>
-        {/* Marriage lines — clickable for divorce toggle */}
+        {/* Marriage lines — clickable */}
         {connectors.filter(c => c.type === 'marriage').map((c, i) => {
+          const isPending = c.status === 'pending';
           const isDivorced = c.marriage_status === 'divorced';
+          const isSeparated = c.marriage_status === 'separated';
+
+          let stroke, dasharray;
+          if (isPending) {
+            stroke = '#fca5a5'; dasharray = '4 4'; // dotted red
+          } else if (isDivorced) {
+            stroke = '#9ca3af'; dasharray = '6 4'; // dotted gray
+          } else if (isSeparated) {
+            stroke = '#9ca3af'; dasharray = '10 4'; // dashed gray
+          } else {
+            stroke = '#fca5a5'; dasharray = 'none'; // solid red
+          }
+
           return (
             <g key={`m-${i}`} style={{ cursor: onMarriageClick ? 'pointer' : 'default', pointerEvents: 'auto' }}
                onClick={() => onMarriageClick?.(c)}>
-              {/* Invisible thick hitbox for easier clicking */}
-              <line
-                x1={c.x1} y1={c.y1} x2={c.x2} y2={c.y2}
-                stroke="transparent" strokeWidth={12}
-              />
-              {/* Visible marriage line — dotted if divorced */}
-              <line
-                x1={c.x1} y1={c.y1} x2={c.x2} y2={c.y2}
-                stroke={isDivorced ? '#f87171' : '#fca5a5'}
-                strokeWidth={2}
-                strokeDasharray={isDivorced ? '6 4' : 'none'}
+              <line x1={c.x1} y1={c.y1} x2={c.x2} y2={c.y2} stroke="transparent" strokeWidth={12} />
+              <line x1={c.x1} y1={c.y1} x2={c.x2} y2={c.y2}
+                stroke={stroke} strokeWidth={2} strokeDasharray={dasharray}
+                style={{ opacity: isPending ? 0.5 : 1 }}
               />
             </g>
           );
@@ -57,7 +64,7 @@ export function ConnectorsSvg({ connectors, onMarriageClick }) {
           pcConnectors.forEach(c => {
             const key = `${c.parentX},${c.parentY}`;
             if (!groups[key]) groups[key] = { parentX: c.parentX, parentY: c.parentY, children: [] };
-            groups[key].children.push({ x: c.childX, y: c.childY });
+            groups[key].children.push({ x: c.childX, y: c.childY, relationship_id: c.relationship_id, status: c.status });
           });
 
           return Object.entries(groups).map(([key, group]) => {
@@ -88,14 +95,21 @@ export function ConnectorsSvg({ connectors, onMarriageClick }) {
                   />
                 )}
 
-                {/* Vertical drop from bar to each child */}
-                {children.map((child, ci) => (
-                  <line
-                    key={ci}
-                    x1={child.x} y1={barY} x2={child.x} y2={child.y}
-                    stroke="#9ca3af" strokeWidth={1.5}
-                  />
-                ))}
+                {/* Vertical drop from bar to each child — clickable */}
+                {children.map((child, ci) => {
+                  const isPending = child.status === 'pending';
+                  return (
+                    <g key={ci} style={{ cursor: onParentChildClick ? 'pointer' : 'default', pointerEvents: 'auto' }}
+                       onClick={() => child.relationship_id && onParentChildClick?.({ relationship_id: child.relationship_id })}>
+                      <line x1={child.x} y1={barY} x2={child.x} y2={child.y} stroke="transparent" strokeWidth={12} />
+                      <line x1={child.x} y1={barY} x2={child.x} y2={child.y}
+                        stroke="#9ca3af" strokeWidth={1.5}
+                        strokeDasharray={isPending ? '4 4' : 'none'}
+                        style={{ pointerEvents: 'none', opacity: isPending ? 0.5 : 1 }}
+                      />
+                    </g>
+                  );
+                })}
 
                 {/* If drop point is not aligned with bar (offset parent), connect drop to bar */}
                 {(parentX < minChildX || parentX > maxChildX) && (

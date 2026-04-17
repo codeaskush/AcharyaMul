@@ -92,13 +92,6 @@ async def google_callback(request: Request, db: Session = Depends(get_db)):
 async def get_current_user_info(request: Request, db: Session = Depends(get_db)):
     """Return the current authenticated user, or 401 if not logged in."""
     token = request.cookies.get("access_token")
-
-    # Dev bypass — only if no real token present
-    if not token and settings.app_env == "development":
-        user = db.query(User).filter(User.email == "dev@admin.local").first()
-        if user:
-            return {"data": _serialize_user(user)}
-
     if not token:
         raise HTTPException(status_code=401, detail="Not authenticated")
 
@@ -111,6 +104,29 @@ async def get_current_user_info(request: Request, db: Session = Depends(get_db))
     user = db.query(User).filter(User.email == email).first()
     if not user:
         raise HTTPException(status_code=401, detail="User not found")
+
+    return {"data": _serialize_user(user)}
+
+
+@router.post("/dev-login")
+async def dev_login(request: Request, response: Response, db: Session = Depends(get_db)):
+    """Dev-only: login with username/password for the local admin account."""
+    if settings.app_env != "development":
+        raise HTTPException(status_code=404, detail="Not found")
+
+    body = await request.json()
+    username = body.get("username", "")
+    password = body.get("password", "")
+
+    if username != settings.dev_admin_username or password != settings.dev_admin_password:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    user = db.query(User).filter(User.email == "dev@admin.local").first()
+    if not user:
+        raise HTTPException(status_code=500, detail="Dev admin user not found in database")
+
+    jwt_token = _create_jwt(user.email)
+    _set_token_cookie(response, jwt_token)
 
     return {"data": _serialize_user(user)}
 

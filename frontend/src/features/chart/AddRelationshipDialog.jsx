@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { personApi, relationshipApi } from '@/api/client';
+import { personApi, relationshipApi, contributionApi } from '@/api/client';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -21,6 +25,8 @@ import {
  */
 export default function AddRelationshipDialog({ open, onClose, person, type, onSuccess }) {
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'admin';
   const [persons, setPersons] = useState([]);
   const [marriages, setMarriages] = useState([]);
   const [selectedMarriage, setSelectedMarriage] = useState(null);
@@ -28,6 +34,7 @@ export default function AddRelationshipDialog({ open, onClose, person, type, onS
   const [filtered, setFiltered] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(null);
+  const [contribMessage, setContribMessage] = useState('');
 
   const isSpouse = type === 'marriage';
   const isChild = type === 'parent_child';
@@ -80,25 +87,29 @@ export default function AddRelationshipDialog({ open, onClose, person, type, onS
   const handleSelect = async (targetPerson) => {
     setSubmitting(targetPerson.id);
     try {
-      if (isSpouse) {
-        await relationshipApi.create({
-          person_a_id: person.id,
-          person_b_id: targetPerson.id,
-          type: 'marriage',
-        });
+      const relData = {
+        person_a_id: person.id,
+        person_b_id: targetPerson.id,
+        type: isSpouse ? 'marriage' : 'parent_child',
+        marriage_id: isChild ? (selectedMarriage?.marriage_id || null) : undefined,
+      };
+
+      if (isAdmin) {
+        await relationshipApi.create(relData);
       } else {
-        await relationshipApi.create({
-          person_a_id: person.id,
-          person_b_id: targetPerson.id,
-          type: 'parent_child',
-          marriage_id: selectedMarriage?.marriage_id || null,
-        });
+        if (!contribMessage.trim()) {
+          toast.error('Please add a message explaining this relationship');
+          setSubmitting(null);
+          return;
+        }
+        await contributionApi.submitRelationshipAdd({ ...relData, message: contribMessage.trim() });
+        toast.success(t('messages.request_submitted'));
       }
       onSuccess?.();
       onClose();
     } catch (err) {
       console.error('Failed to create relationship:', err);
-      alert(err.detail || 'Failed to create relationship');
+      toast.error(err.detail || 'Failed to create relationship');
     } finally {
       setSubmitting(null);
     }
@@ -198,6 +209,19 @@ export default function AddRelationshipDialog({ open, onClose, person, type, onS
           <p className="text-xs text-muted-foreground">
             Select the child to add{selectedMarriage ? ` under ${person?.first_name} & ${selectedMarriage.spouse_name}` : ` as ${person?.first_name}'s child`}
           </p>
+        )}
+
+        {/* Contributor message (required for non-admins) */}
+        {!isAdmin && (
+          <div className="space-y-1.5">
+            <Label className="text-xs">{t('contribute.message')} *</Label>
+            <Textarea
+              className="min-h-14 text-xs"
+              placeholder="Why are you adding this relationship?"
+              value={contribMessage}
+              onChange={(e) => setContribMessage(e.target.value)}
+            />
+          </div>
         )}
 
         {/* Search */}

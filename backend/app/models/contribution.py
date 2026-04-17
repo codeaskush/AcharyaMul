@@ -20,6 +20,7 @@ class Contribution(Base):
     status: Mapped[ContributionStatus] = mapped_column(
         Enum(ContributionStatus), default=ContributionStatus.pending, index=True
     )
+    contributor_message: Mapped[str | None] = mapped_column(Text, nullable=True)
     admin_comment: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     reviewed_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)

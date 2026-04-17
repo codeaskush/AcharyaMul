@@ -4,6 +4,7 @@ import { graphApi, relationshipApi } from '@/api/client';
 import { buildHorizontalLayout } from './layoutHorizontal';
 import PersonDetailWide from '@/features/person/PersonDetailWide';
 import AddRelationshipDialog from './AddRelationshipDialog';
+import RelationshipDetailDialog from './RelationshipDetailDialog';
 import { Loader2, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -24,6 +25,7 @@ export default function FamilyChartD3() {
   const [expandedFamilies, setExpandedFamilies] = useState(new Set());
   const [selectedPerson, setSelectedPerson] = useState(null);
   const [relDialog, setRelDialog] = useState({ open: false, person: null, type: null });
+  const [relDetailId, setRelDetailId] = useState(null);
   const [popover, setPopover] = useState(null);
   const [zoomTransform, setZoomTransform] = useState({ x: 0, y: 0, k: 1 });
 
@@ -65,7 +67,16 @@ export default function FamilyChartD3() {
 
     // Marriage lines (vertical)
     connectors.filter(c => c.type === 'marriage').forEach(c => {
+      const isPending = c.status === 'pending';
       const isDivorced = c.marriage_status === 'divorced';
+      const isSeparated = c.marriage_status === 'separated';
+
+      let stroke, dasharray, opacity;
+      if (isPending) { stroke = '#fca5a5'; dasharray = '4 4'; opacity = 0.5; }
+      else if (isDivorced) { stroke = '#9ca3af'; dasharray = '6 4'; opacity = 1; }
+      else if (isSeparated) { stroke = '#9ca3af'; dasharray = '10 4'; opacity = 1; }
+      else { stroke = '#fca5a5'; dasharray = 'none'; opacity = 1; }
+
       connLayer.append('line')
         .attr('x1', c.x1).attr('y1', c.y1).attr('x2', c.x2).attr('y2', c.y2)
         .attr('stroke', 'transparent').attr('stroke-width', 14)
@@ -73,10 +84,9 @@ export default function FamilyChartD3() {
         .on('click', () => handleMarriageClick(c));
       connLayer.append('line')
         .attr('x1', c.x1).attr('y1', c.y1).attr('x2', c.x2).attr('y2', c.y2)
-        .attr('stroke', isDivorced ? '#f87171' : '#fca5a5')
-        .attr('stroke-width', 2)
-        .attr('stroke-dasharray', isDivorced ? '6 4' : 'none')
-        .style('pointer-events', 'none');
+        .attr('stroke', stroke).attr('stroke-width', 2)
+        .attr('stroke-dasharray', dasharray)
+        .style('pointer-events', 'none').style('opacity', opacity);
     });
 
     // Parent-child (horizontal bezier)
@@ -188,13 +198,8 @@ export default function FamilyChartD3() {
   const zoomOut = () => d3.select(svgRef.current).call(zoomRef.current.scaleBy, 0.7);
   const handleNodeClick = (person) => setPopover(popover?.id === person.id ? null : person);
 
-  const handleMarriageClick = async (c) => {
-    const action = c.marriage_status === 'divorced' ? 'restore' : 'divorce';
-    if (!confirm(`Mark as ${action === 'divorce' ? 'divorced' : 'active'}?`)) return;
-    try {
-      await relationshipApi.update(c.marriage_id, { marriage_status: action === 'divorce' ? 'divorced' : 'active', comment: action === 'divorce' ? 'Marked as divorced' : 'Restored marriage' });
-      loadGraph();
-    } catch (err) { alert(err.detail || 'Failed'); }
+  const handleMarriageClick = (c) => {
+    setRelDetailId(c.marriage_id);
   };
 
   if (loading) return <div className="flex items-center justify-center h-[calc(100vh-3.5rem)]"><Loader2 className="h-10 w-10 animate-spin text-muted-foreground" /></div>;
@@ -230,6 +235,7 @@ export default function FamilyChartD3() {
 
       {selectedPerson && <PersonDetailWide person={selectedPerson} onClose={() => setSelectedPerson(null)} />}
       <AddRelationshipDialog open={relDialog.open} onClose={() => setRelDialog({ open: false, person: null, type: null })} person={relDialog.person} type={relDialog.type} onSuccess={loadGraph} />
+      <RelationshipDetailDialog relationshipId={relDetailId} open={!!relDetailId} onClose={() => setRelDetailId(null)} onUpdated={loadGraph} />
     </div>
   );
 }

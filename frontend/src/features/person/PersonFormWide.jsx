@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { personApi } from '@/api/client';
+import { personApi, contributionApi } from '@/api/client';
+import { toast } from 'sonner';
 import { Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -32,7 +33,7 @@ const LIFE_EVENT_TYPES = [
   { value: 'other', label: 'Other', icon: '📌' },
 ];
 
-export default function PersonFormWide({ person, onSave, onCancel }) {
+export default function PersonFormWide({ person, onSave, onCancel, contributorMode = false }) {
   const { t } = useTranslation();
   const isEdit = !!person;
 
@@ -41,6 +42,7 @@ export default function PersonFormWide({ person, onSave, onCancel }) {
     return { ...EMPTY_FORM };
   });
   const [comment, setComment] = useState('');
+  const [contributorMsg, setContributorMsg] = useState('');
   const [photoFile, setPhotoFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -144,6 +146,14 @@ export default function PersonFormWide({ person, onSave, onCancel }) {
         occupation: form.occupation || null,
       };
       let result;
+      if (contributorMode && !isEdit) {
+        // Contributor: submit through contribution API (pending review)
+        result = await contributionApi.submitPersonAdd({ ...payload, message: contributorMsg || null });
+        toast.success(t('messages.request_submitted'));
+        onSave?.(result.data);
+        return;
+      }
+
       if (isEdit) result = await personApi.update(person.id, { ...payload, comment });
       else result = await personApi.create(payload);
 
@@ -529,6 +539,14 @@ export default function PersonFormWide({ person, onSave, onCancel }) {
         <div className="px-6 py-3 border-t shrink-0">
           <Label className="text-xs">Comment *</Label>
           <Textarea className="min-h-16 mt-1.5 text-xs" placeholder="Describe what you changed and why..." value={comment} onChange={(e) => setComment(e.target.value)} required />
+        </div>
+      )}
+
+      {/* Contributor message (contributor mode) */}
+      {contributorMode && !isEdit && (
+        <div className="px-6 py-3 border-t shrink-0">
+          <Label className="text-xs">{t('contribute.message')} *</Label>
+          <Textarea className="min-h-16 mt-1.5 text-xs" placeholder="Why are you adding this person? Any context for the admin..." value={contributorMsg} onChange={(e) => setContributorMsg(e.target.value)} required />
         </div>
       )}
 

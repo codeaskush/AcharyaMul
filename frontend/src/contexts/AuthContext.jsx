@@ -39,6 +39,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   const logout = useCallback(async () => {
+    if (!window.confirm('Are you sure you want to logout?')) return;
     try {
       await authApi.logout();
     } catch {

@@ -14,6 +14,8 @@ import PersonListPage from '@/features/person/PersonListPage';
 import FamilyChart from '@/features/chart/FamilyChartSwitcher';
 import LoginPage from '@/features/auth/LoginPage';
 import AdminPage from '@/features/admin/AdminPage';
+import MyContributions from '@/features/contributor/MyContributions';
+import AnalyticsPage from '@/features/analytics/AnalyticsPage';
 import { Toaster } from '@/components/ui/sonner';
 import '@/styles/global.css';
 
@@ -52,9 +54,13 @@ function NavBar() {
     { path: '/', label: t('nav.home') },
     { path: '/chart', label: t('nav.chart'), auth: true },
     { path: '/members', label: t('nav.members'), auth: true },
+    { path: '/analytics', label: t('nav.analytics'), auth: true },
   ];
 
-  // Admin panel is shown as a separate button on the right, not in the nav list
+  // Show "My Contributions" nav for contributors
+  if (user?.role === 'contributor') {
+    navItems.push({ path: '/my-contributions', label: t('nav.my_contributions'), auth: true });
+  }
 
   return (
     <nav className="flex items-center px-5 h-14 bg-background border-b gap-5">
@@ -120,11 +126,8 @@ function AppRoutes() {
           {/* Authenticated routes */}
           <Route path="/chart" element={<ProtectedRoute><FamilyChart /></ProtectedRoute>} />
           <Route path="/members" element={<ProtectedRoute><PersonListPage /></ProtectedRoute>} />
-          <Route path="/my-contributions" element={
-            <ProtectedRoute>
-              <div className="flex items-center justify-center h-[calc(100vh-3.5rem)] text-muted-foreground text-lg">My Contributions (Story 6.5)</div>
-            </ProtectedRoute>
-          } />
+          <Route path="/my-contributions" element={<ProtectedRoute><MyContributions /></ProtectedRoute>} />
+          <Route path="/analytics" element={<ProtectedRoute><AnalyticsPage /></ProtectedRoute>} />
 
           {/* Admin-only routes */}
           <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminPage /></ProtectedRoute>} />

@@ -53,8 +53,13 @@ def get_person_by_id(db: Session, person_id: int) -> Person | None:
     return db.query(Person).filter(Person.id == person_id).first()
 
 
-def get_all_persons(db: Session, page: int = 1, per_page: int = 25, sort_by: str = "first_name"):
+def get_all_persons(db: Session, page: int = 1, per_page: int = 25, sort_by: str = "first_name", include_quarantined: bool = False, approved_only: bool = False):
     query = db.query(Person)
+
+    if approved_only:
+        query = query.filter(Person.status == ApprovalStatus.approved)
+    elif not include_quarantined:
+        query = query.filter(Person.status != ApprovalStatus.quarantined)
 
     if sort_by == "first_name":
         query = query.order_by(Person.first_name.asc())
